@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
+// const ytdl = require('ytdl-core');
 
 const client = new Discord.Client();
 dotenv.config();
