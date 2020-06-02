@@ -8,10 +8,13 @@ dotenv.config();
 const botToken = process.env.BOT_TOKEN;
 const PREFIX = '!';
 
+// Creating an empty collection to store our commands
 client.commands = new Discord.Collection();
 
+// Looking for all .js files inside the commands folder
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
+// Adding all commands into the empty collection, 'client.commands'
 for(const file of commandFiles) {
     const command = require(`./commands/${file}`);
 
@@ -22,16 +25,18 @@ client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
-client.on('message', msg => {
+client.on('message', async msg => {
     if(!msg.content.startsWith(PREFIX) || msg.author.bot) return;
 
     const args = msg.content.slice(PREFIX.length).split(' ');
-    const command = args.shift().toLowerCase();
+    const commandName = args.shift().toLowerCase();
 
-    if(!client.commands.has(command)) return;
+    if(!client.commands.has(commandName)) return;
+
+    const command = client.commands.get(commandName);
 
     try {
-        client.commands.get(command).execute(msg, args);
+        command.execute(msg, args);
     } catch(error) {
         console.error(error);
     }
