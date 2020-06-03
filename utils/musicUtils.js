@@ -22,7 +22,7 @@ function CreateQueue(queue, message, voiceChannel = null, connection = null) {
         voiceChannel: voiceChannel,
         connection: connection,
         songs: [],
-        volume: 1,
+        volume: 0.5,
         playing: false
     }
 
