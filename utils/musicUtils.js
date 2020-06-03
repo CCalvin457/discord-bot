@@ -14,17 +14,6 @@ async function JoinChannel(message) {
     const connection = await voiceChannel.join();
 
     return connection;
-    // if(voiceChannel) {
-    //     const connection = await voiceChannel.join();
-
-    //     return connection;
-    // } else {
-    //     message.reply('You need to join a voice channel first!');
-    //     const permissions = voiceChannel.permissionsFor(message.client.user);
-    //     if(!permissions.has("CONNECT") || !permissions.has("SPEAK")) {
-    //         return message.channel.send('I need the permissions to join and speak in your voice channel!');
-    //     }
-    // }
 }
 
 function CreateQueue(queue, message, voiceChannel, connection) {
@@ -39,6 +28,17 @@ function CreateQueue(queue, message, voiceChannel, connection) {
 
     queue.set(message.guild.id, queueConstruct);
 }
+
+function UpdateQueue(queue, message, voiceChannel, connection) {
+    const serverQueue = queue.get(message.guild.id);
+
+    serverQueue.textChannel = message.channel;
+    serverQueue.voiceChannel = voiceChannel;
+    serverQueue.connection = connection;
+
+    queue.set(message.guild.id, serverQueue);
+}
+
 
 function Play(queue, guild, song) {
     const serverQueue = queue.get(guild.id);
@@ -64,5 +64,6 @@ function Play(queue, guild, song) {
 module.exports = {
     JoinChannel,
     CreateQueue,
+    UpdateQueue,
     Play
 }

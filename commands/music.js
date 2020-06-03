@@ -1,4 +1,4 @@
-const { JoinChannel, CreateQueue, Play } = require('../utils/musicUtils.js');
+const { JoinChannel, CreateQueue, UpdateQueue, Play } = require('../utils/musicUtils.js');
 const ytdl = require('ytdl-core');
 module.exports = {
     name: 'music',
@@ -14,13 +14,22 @@ module.exports = {
                 JoinChannel(message).then(connection => {
                     if(!data.serverQueue) {
                         CreateQueue(data.queue, message, voiceChannel, connection);
+                    } else {
+                        UpdateQueue(data.queue, message, voiceChannel, connection);
                     }
                 });
                 break;
             case 'l':
                 if(bot.voice.channel != null) {
+                    if(data.serverQueue) {
+                        data.serverQueue.connection = null;
+                        data.serverQueue.voiceChannel = null;
+
+                        data.queue.set(message.guild.id, data.serverQueue);
+                    }
+
                     bot.voice.channel.leave();
-                    data.queue.connection = null;
+                    
                     message.channel.send('Successfully left the voice channel!');
                 } else {
                     message.reply('I\'m not currently in a voice channel!');
@@ -39,20 +48,18 @@ module.exports = {
 
                 if(bot.voice.channel == null || bot.voice.channel != voiceChannel) {
                     if(!data.serverQueue) {
-                        console.log('hi')
                         JoinChannel(message).then(connection => {
                             CreateQueue(data.queue, message, voiceChannel, connection);
                             Play(data.queue, message.guild, song);
                         });
                     } else {
-                        console.log('tf');
                         JoinChannel(message).then(connection => {
-                            data.serverQueue.connection = connection;
+                            UpdateQueue(data.queue, message, voiceChannel, connection);
                             Play(data.queue, message.guild, song);
-                        })
-                        // console.log(`serverqueue already here: ${data.serverQueue}`);
+                        });
                     }
                 } else {
+                    console.log('already in correct channel');
                     Play(data.queue, message.guild, song);
                 }
                 break;
