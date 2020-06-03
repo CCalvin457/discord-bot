@@ -14,6 +14,7 @@ client.commands = new Discord.Collection();
 
 // Looking for all .js files inside the commands folder
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+const queue = new Map();
 
 // Adding all commands into the empty collection, 'client.commands'
 for(const file of commandFiles) {
@@ -29,15 +30,22 @@ client.once('ready', () => {
 client.on('message', async msg => {
     if(!msg.content.startsWith(PREFIX) || msg.author.bot) return;
 
+    let serverQueue = queue.get(msg.guild.id);
     const args = msg.content.slice(PREFIX.length).split(' ');
     const commandName = args.shift().toLowerCase();
+
+    const data = {
+        args: args,
+        serverQueue: serverQueue,
+        queue: queue
+    }
 
     if(!client.commands.has(commandName)) return;
 
     const command = client.commands.get(commandName);
 
     try {
-        command.execute(msg, args);
+        command.execute(msg, data);
     } catch(error) {
         console.error(error);
     }
