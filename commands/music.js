@@ -1,4 +1,4 @@
-const { JoinChannel, CreateQueue, UpdateQueue, Play } = require('../utils/musicUtils.js');
+const { JoinChannel, CreateQueue, UpdateQueue, Play, SetVolume } = require('../utils/musicUtils.js');
 const ytdl = require('ytdl-core');
 module.exports = {
     name: 'music',
@@ -69,8 +69,28 @@ module.exports = {
                     return;
                 }
 
+                if(!data.serverQueue) {
+                    CreateQueue(data.queue, message);
+                    data.serverQueue = data.queue.get(message.guild.id);
+                }
 
-                
+                const volume = Number(data.args[1]);
+
+                if(volume == NaN) {
+                    return message.reply('You must enter a valid number to set the volume');
+                }
+
+                if(volume < 0.0 || volume > 1.0) {
+                    return message.reply('Please enter a value between 0 and 1');
+                }
+
+                if(data.serverQueue.connection) {
+                    data.serverQueue.connection.dispatcher.setVolumeLogarithmic(volume);
+                }
+
+                SetVolume(data.queue, message.guild, volume);
+
+                message.channel.send(`Volume has been set to ${(volume * 100)}%`)
                 break;
             default:
                 message.reply('Invalid argument(s)');

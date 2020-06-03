@@ -16,13 +16,13 @@ async function JoinChannel(message) {
     return connection;
 }
 
-function CreateQueue(queue, message, voiceChannel, connection) {
+function CreateQueue(queue, message, voiceChannel = null, connection = null) {
     const queueConstruct = {
         textChannel: message.channel,
         voiceChannel: voiceChannel,
         connection: connection,
         songs: [],
-        volume: 5,
+        volume: 1,
         playing: false
     }
 
@@ -58,12 +58,22 @@ function Play(queue, guild, song) {
             console.error(error);
         });
     
+    dispatcher.setVolumeLogarithmic(serverQueue.volume);
     serverQueue.textChannel.send(`Start Playing: ***${song.title}***`);
+}
+
+function SetVolume(queue, guild, vol) {
+    const serverQueue = queue.get(guild.id);
+
+    serverQueue.volume = vol;
+
+    queue.set(guild.id, serverQueue);
 }
 
 module.exports = {
     JoinChannel,
     CreateQueue,
     UpdateQueue,
-    Play
+    Play,
+    SetVolume
 }
