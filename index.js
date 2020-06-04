@@ -1,13 +1,11 @@
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
-// const ytdl = require('ytdl-core');
 
 const client = new Discord.Client();
 dotenv.config();
 
 const botToken = process.env.BOT_TOKEN;
-const PREFIX = '!';
 
 // Creating an empty collection to store our commands
 client.commands = new Discord.Collection();
@@ -28,10 +26,10 @@ client.once('ready', () => {
 });
 
 client.on('message', async msg => {
-    if(!msg.content.startsWith(PREFIX) || msg.author.bot) return;
+    if(!msg.content.startsWith(process.env.PREFIX) || msg.author.bot) return;
 
     let serverQueue = queue.get(msg.guild.id);
-    const args = msg.content.slice(PREFIX.length).split(' ');
+    const args = msg.content.slice(process.env.PREFIX.length).split(' ');
     const commandName = args.shift().toLowerCase();
 
     const data = {

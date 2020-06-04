@@ -30,9 +30,9 @@ module.exports = {
 
                     bot.voice.channel.leave();
                     
-                    message.channel.send('Successfully left the voice channel!');
+                    return message.channel.send('Successfully left the voice channel!');
                 } else {
-                    message.reply('I\'m not currently in a voice channel!');
+                    return message.reply('I\'m not currently in a voice channel!');
                 }
                 break;
             case 'p':
