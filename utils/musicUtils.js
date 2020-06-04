@@ -59,7 +59,7 @@ function Play(queue, guild, song) {
         });
     
     dispatcher.setVolumeLogarithmic(serverQueue.volume);
-    serverQueue.textChannel.send(`Start Playing: ***${song.title}***`);
+    serverQueue.textChannel.send(`Now Playing: ***${song.title}***`);
 }
 
 function SetVolume(queue, message, value) {
@@ -85,17 +85,33 @@ function ValidateVolume(value) {
         message: ''
     }
 
+    console.log(value);
+
     if(Number.isNaN(volume)) {
         console.log('its NaN');
         returnValue.message = 'You must enter a valid number to set the volume';
-    }else if(volume < 0.0 || volume > 1.0) {
+    }else if(volume < 0 || volume > 1) {
+        console.log('out of bounds????');
         returnValue.message = 'Please enter a value between 0 and 1';
     } else {
         returnValue.success = true;
         returnValue.value = volume;
+        returnValue.message = '';
     }
 
     return returnValue;
+}
+
+async function CreateSongInfo(url) {
+
+    const songInfo = await ytdl.getInfo(url);
+
+    const song = {
+        title: songInfo.videoDetails.title,
+        url: songInfo.videoDetails.video_url
+    }
+
+    return {title: songInfo.videoDetails.title, url: songInfo.videoDetails.video_url};
 }
 
 module.exports = {
@@ -104,5 +120,6 @@ module.exports = {
     UpdateQueue,
     Play,
     SetVolume,
-    ValidateVolume
+    ValidateVolume,
+    CreateSongInfo
 }

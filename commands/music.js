@@ -1,4 +1,4 @@
-const { JoinChannel, CreateQueue, UpdateQueue, Play, SetVolume, ValidateVolume } = require('../utils/musicUtils.js');
+const { JoinChannel, CreateQueue, UpdateQueue, Play, SetVolume, ValidateVolume, CreateSongInfo } = require('../utils/musicUtils.js');
 const ytdl = require('ytdl-core');
 module.exports = {
     name: 'music',
@@ -8,6 +8,7 @@ module.exports = {
 
         const voiceChannel = message.member.voice.channel;
         const bot = message.guild.me;
+        let song;
 
         switch(data.args[0]) {
             case 'j':
@@ -39,12 +40,9 @@ module.exports = {
                 if(data.args[1] == null) {
                     return message.reply('Please specify the song you wish to play by entering a youtube url');
                 }
-                const songInfo = await ytdl.getInfo(data.args[1]);
 
-                const song = {
-                    title: songInfo.videoDetails.title,
-                    url: songInfo.videoDetails.video_url
-                }
+                song = await CreateSongInfo(data.args[1]);
+                
 
                 if(!data.serverQueue) {
                     CreateQueue(data.queue, message);
@@ -52,6 +50,7 @@ module.exports = {
                 }
 
                 const songs = data.serverQueue.songs;
+                
                 songs.push(song);
 
                 if(bot.voice.channel == null || bot.voice.channel != voiceChannel) {
@@ -66,8 +65,7 @@ module.exports = {
                 break;
             case 'v':
                 if(data.args[1] == null) {
-                    message.reply('second argument missing');
-                    return;
+                    return message.reply('Please include a value between 0 and 1');
                 }
 
                 if(!data.serverQueue) {
@@ -75,13 +73,37 @@ module.exports = {
                     data.serverQueue = data.queue.get(message.guild.id);
                 }
 
-                const volumeInfo = ValidateVolume(message, data.args[1]);
+                const volumeInfo = ValidateVolume(data.args[1]);
 
                 if(!volumeInfo.success) {
                     return message.reply(volumeInfo.message);
                 }
 
                 SetVolume(data.queue, message, volumeInfo.value);
+                break;
+            case 'np':
+                if(!data.serverQueue || !data.serverQueue.connection) {
+                    return message.reply('No song currently playing');
+                }
+
+                
+                break;
+            case 'q':
+                if(data.args[1] == null) {
+                    return message.reply('Please include a youtube url');
+                }
+                
+                if(!data.serverQueue) {
+                    CreateQueue(data.queue, message);
+                    data.serverQueue = data.queue.get(message.guild.id);
+                }
+
+                song = await CreateSongInfo(data.args[1]);
+
+                data.serverQueue.songs.push(song);
+
+                return message.reply(`${song.title} has been added to the queue!`);
+
                 break;
             default:
                 message.reply('Invalid argument(s)');
