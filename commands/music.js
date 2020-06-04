@@ -47,6 +47,10 @@ module.exports = {
                     data.serverQueue.songs.push(song);
                 }
 
+                if(data.serverQueue.playing) {
+                    return message.reply(`${song.title} has been added to the queue!`);
+                }
+
                 if(bot.voice.channel == null || bot.voice.channel != voiceChannel) {
                     JoinChannel(message).then(connection => {
                         UpdateQueue(data.queue, message, voiceChannel, connection);
