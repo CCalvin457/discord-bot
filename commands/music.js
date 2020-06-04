@@ -1,5 +1,6 @@
 const { JoinChannel, CreateQueue, UpdateQueue, Play, SetVolume, ValidateVolume, CreateSongInfo } = require('../utils/musicUtils.js');
 const ytdl = require('ytdl-core');
+const Discord = require('discord.js');
 module.exports = {
     name: 'music',
     description: 'Allows user to request a song for the bot to play',
@@ -10,24 +11,23 @@ module.exports = {
         const bot = message.guild.me;
         let song;
 
+        if(!data.serverQueue) {
+            CreateQueue(data.queue, message);
+            data.serverQueue = data.queue.get(message.guild.id);
+        }
+
         switch(data.args[0]) {
             case 'j':
                 JoinChannel(message).then(connection => {
-                    if(!data.serverQueue) {
-                        CreateQueue(data.queue, message, voiceChannel, connection);
-                    } else {
-                        UpdateQueue(data.queue, message, voiceChannel, connection);
-                    }
+                    UpdateQueue(data.queue, message, voiceChannel, connection);
                 });
                 break;
             case 'l':
                 if(bot.voice.channel != null) {
-                    if(data.serverQueue) {
-                        data.serverQueue.connection = null;
-                        data.serverQueue.voiceChannel = null;
+                    data.serverQueue.connection = null;
+                    data.serverQueue.voiceChannel = null;
 
-                        data.queue.set(message.guild.id, data.serverQueue);
-                    }
+                    data.queue.set(message.guild.id, data.serverQueue);
 
                     bot.voice.channel.leave();
                     
@@ -37,40 +37,29 @@ module.exports = {
                 }
                 break;
             case 'p':
-                if(data.args[1] == null) {
+                if(data.args[1] == null && data.serverQueue.songs.length == 0) {
                     return message.reply('Please specify the song you wish to play by entering a youtube url');
                 }
 
-                song = await CreateSongInfo(data.args[1]);
+                if(data.args[1] != null) {
+                    song = await CreateSongInfo(data.args[1]);
                 
-
-                if(!data.serverQueue) {
-                    CreateQueue(data.queue, message);
-                    data.serverQueue = data.queue.get(message.guild.id);
+                    data.serverQueue.songs.push(song);
                 }
-
-                const songs = data.serverQueue.songs;
-                
-                songs.push(song);
 
                 if(bot.voice.channel == null || bot.voice.channel != voiceChannel) {
                     JoinChannel(message).then(connection => {
                         UpdateQueue(data.queue, message, voiceChannel, connection);
-                        Play(data.queue, message.guild, songs[0]);
+                        Play(data.queue, message.guild, data.serverQueue.songs[0]);
                     });
                 } else {
                     console.log('already in correct channel');
-                    Play(data.queue, message.guild, songs[0]);
+                    Play(data.queue, message.guild, data.serverQueue.songs[0]);
                 }
                 break;
             case 'v':
                 if(data.args[1] == null) {
                     return message.reply('Please include a value between 0 and 1');
-                }
-
-                if(!data.serverQueue) {
-                    CreateQueue(data.queue, message);
-                    data.serverQueue = data.queue.get(message.guild.id);
                 }
 
                 const volumeInfo = ValidateVolume(data.args[1]);
@@ -82,27 +71,55 @@ module.exports = {
                 SetVolume(data.queue, message, volumeInfo.value);
                 break;
             case 'np':
-                if(!data.serverQueue || !data.serverQueue.connection) {
-                    return message.reply('No song currently playing');
+                if(!data.serverQueue.playing) {
+                    return message.reply('no song currently playing');
                 }
-
                 
+                const currentSong = data.serverQueue.nowPlaying;
+
+                const curSongEmbed = new Discord.MessageEmbed()
+                    .setColor('#a6f87e')
+                    .setTitle('Now Playing')
+                    .addField(currentSong.title, currentSong.url)
+
+                message.channel.send(curSongEmbed);
                 break;
             case 'q':
                 if(data.args[1] == null) {
                     return message.reply('Please include a youtube url');
-                }
-                
-                if(!data.serverQueue) {
-                    CreateQueue(data.queue, message);
-                    data.serverQueue = data.queue.get(message.guild.id);
                 }
 
                 song = await CreateSongInfo(data.args[1]);
 
                 data.serverQueue.songs.push(song);
 
-                return message.reply(`${song.title} has been added to the queue!`);
+                message.reply(`${song.title} has been added to the queue!`);
+
+                break;
+            case 'list':
+                const songList = data.serverQueue.songs;
+                console.log(songList);
+                if(songList.length == 0) {
+                    return message.channel.send('There are currently no songs in the queue.');
+                }
+
+                const songs = [];
+
+                for(var i = 0; i < songList.length; i++) {
+                    let curSong = songList[i];
+                    songs.push({
+                        name: `${i + 1}. ${curSong.title}`,
+                        value: curSong.url
+                    });
+                }
+
+                const musicListEmbed = new Discord.MessageEmbed()
+                    .setColor('#0099ff')
+                    .setTitle('Song List')
+                    .setDescription('Songs currently in the queue')
+                    .addFields(songs)
+
+                message.channel.send(musicListEmbed);
 
                 break;
             default:

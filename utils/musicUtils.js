@@ -23,7 +23,8 @@ function CreateQueue(queue, message, voiceChannel = null, connection = null) {
         connection: connection,
         songs: [],
         volume: 0.5,
-        playing: false
+        playing: false,
+        nowPlaying: {}
     }
 
     queue.set(message.guild.id, queueConstruct);
@@ -44,9 +45,12 @@ function Play(queue, guild, song) {
     const serverQueue = queue.get(guild.id);
 
     if(!song) {
-        queue.delete(guild.id);
+        UpdatePlaying(queue, guild, false);
+        UpdateNowPlaying(queue, guild)
         return;
     }
+
+    console.log(song);
 
     const dispatcher = serverQueue.connection
         .play(ytdl(song.url, {filter: "audioonly"}))
@@ -60,6 +64,8 @@ function Play(queue, guild, song) {
     
     dispatcher.setVolumeLogarithmic(serverQueue.volume);
     serverQueue.textChannel.send(`Now Playing: ***${song.title}***`);
+    UpdatePlaying(queue, guild, true);
+    UpdateNowPlaying(queue, guild, song);
 }
 
 function SetVolume(queue, message, value) {
@@ -103,15 +109,39 @@ function ValidateVolume(value) {
 }
 
 async function CreateSongInfo(url) {
-
-    const songInfo = await ytdl.getInfo(url);
-
-    const song = {
-        title: songInfo.videoDetails.title,
-        url: songInfo.videoDetails.video_url
+    var songInfo, song = {};
+    try {
+        songInfo = await ytdl.getInfo(url);
+        song = {
+            title: songInfo.videoDetails.title,
+            url: songInfo.videoDetails.video_url
+        }
+    } catch(error) {
+        console.error(error);
+        return;
     }
 
-    return {title: songInfo.videoDetails.title, url: songInfo.videoDetails.video_url};
+    return song;
+}
+
+function UpdatePlaying(queue, guild, isPlaying) {
+    const serverQueue = queue.get(guild.id);
+
+    serverQueue.playing = isPlaying;
+
+    queue.set(guild.id, serverQueue);
+}
+
+function UpdateNowPlaying(queue, guild, song = null) {
+    const serverQueue = queue.get(guild.id);
+
+    if(song != null) {
+        serverQueue.nowPlaying = song;
+    } else {
+        serverQueue.nowPlaying = {}
+    }
+
+    queue.set(guild.id, serverQueue);
 }
 
 module.exports = {
