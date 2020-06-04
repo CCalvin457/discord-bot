@@ -62,12 +62,40 @@ function Play(queue, guild, song) {
     serverQueue.textChannel.send(`Start Playing: ***${song.title}***`);
 }
 
-function SetVolume(queue, guild, vol) {
-    const serverQueue = queue.get(guild.id);
+function SetVolume(queue, message, value) {
+    const serverQueue = queue.get(message.guild.id);
 
-    serverQueue.volume = vol;
+    if(serverQueue.connection) {
+        serverQueue.connection.dispatcher.setVolumeLogarithmic(value);
+    }
 
-    queue.set(guild.id, serverQueue);
+    serverQueue.volume = value;
+
+    queue.set(message.guild.id, serverQueue);
+
+    return message.channel.send(`Volume has been set to ${(value * 100)}%`);
+}
+
+function ValidateVolume(value) {
+    const volume = Number(value);
+
+    let returnValue = {
+        success: false,
+        value: NaN,
+        message: ''
+    }
+
+    if(Number.isNaN(volume)) {
+        console.log('its NaN');
+        returnValue.message = 'You must enter a valid number to set the volume';
+    }else if(volume < 0.0 || volume > 1.0) {
+        returnValue.message = 'Please enter a value between 0 and 1';
+    } else {
+        returnValue.success = true;
+        returnValue.value = volume;
+    }
+
+    return returnValue;
 }
 
 module.exports = {
@@ -75,5 +103,6 @@ module.exports = {
     CreateQueue,
     UpdateQueue,
     Play,
-    SetVolume
+    SetVolume,
+    ValidateVolume
 }

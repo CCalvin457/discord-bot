@@ -1,4 +1,4 @@
-const { JoinChannel, CreateQueue, UpdateQueue, Play, SetVolume } = require('../utils/musicUtils.js');
+const { JoinChannel, CreateQueue, UpdateQueue, Play, SetVolume, ValidateVolume } = require('../utils/musicUtils.js');
 const ytdl = require('ytdl-core');
 module.exports = {
     name: 'music',
@@ -46,21 +46,22 @@ module.exports = {
                     url: songInfo.videoDetails.video_url
                 }
 
+                if(!data.serverQueue) {
+                    CreateQueue(data.queue, message);
+                    data.serverQueue = data.queue.get(message.guild.id);
+                }
+
+                const songs = data.serverQueue.songs;
+                songs.push(song);
+
                 if(bot.voice.channel == null || bot.voice.channel != voiceChannel) {
-                    if(!data.serverQueue) {
-                        JoinChannel(message).then(connection => {
-                            CreateQueue(data.queue, message, voiceChannel, connection);
-                            Play(data.queue, message.guild, song);
-                        });
-                    } else {
-                        JoinChannel(message).then(connection => {
-                            UpdateQueue(data.queue, message, voiceChannel, connection);
-                            Play(data.queue, message.guild, song);
-                        });
-                    }
+                    JoinChannel(message).then(connection => {
+                        UpdateQueue(data.queue, message, voiceChannel, connection);
+                        Play(data.queue, message.guild, songs[0]);
+                    });
                 } else {
                     console.log('already in correct channel');
-                    Play(data.queue, message.guild, song);
+                    Play(data.queue, message.guild, songs[0]);
                 }
                 break;
             case 'v':
@@ -74,23 +75,13 @@ module.exports = {
                     data.serverQueue = data.queue.get(message.guild.id);
                 }
 
-                const volume = Number(data.args[1]);
+                const volumeInfo = ValidateVolume(message, data.args[1]);
 
-                if(volume == NaN) {
-                    return message.reply('You must enter a valid number to set the volume');
+                if(!volumeInfo.success) {
+                    return message.reply(volumeInfo.message);
                 }
 
-                if(volume < 0.0 || volume > 1.0) {
-                    return message.reply('Please enter a value between 0 and 1');
-                }
-
-                if(data.serverQueue.connection) {
-                    data.serverQueue.connection.dispatcher.setVolumeLogarithmic(volume);
-                }
-
-                SetVolume(data.queue, message.guild, volume);
-
-                message.channel.send(`Volume has been set to ${(volume * 100)}%`)
+                SetVolume(data.queue, message, volumeInfo.value);
                 break;
             default:
                 message.reply('Invalid argument(s)');
