@@ -133,12 +133,17 @@ module.exports = {
                     return message.reply('There are no songs in the queue.');
                 }
 
-                if(data.serverQueue.playing) {
-                    
-                }
+                let skippedSong = data.serverQueue.songs.shift();
+                message.channel.send(`${skippedSong.title} has been skipped!`);
 
-                data.serverQueue.songs.shift();
-                Play(data.queue, message.guild, data.serverQueue.songs[0]);
+                if(data.serverQueue.playing) {
+                    if(data.serverQueue.songs.length > 0){
+                        Play(data.queue, message.guild, data.serverQueue.songs[0]);
+                    } else {
+                        data.serverQueue.connection.dispatcher.pause(true);
+                    }
+                }
+                
                 break;
             default:
                 message.reply('Invalid argument(s)');
