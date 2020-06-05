@@ -26,6 +26,8 @@ module.exports = {
                 if(bot.voice.channel != null) {
                     data.serverQueue.connection = null;
                     data.serverQueue.voiceChannel = null;
+                    data.serverQueue.playing = false;
+                    data.serverQueue.nowPlaying = {};
 
                     data.queue.set(message.guild.id, data.serverQueue);
 
@@ -125,6 +127,18 @@ module.exports = {
 
                 message.channel.send(musicListEmbed);
 
+                break;
+            case 's':
+                if(data.serverQueue.songs.length == 0) {
+                    return message.reply('There are no songs in the queue.');
+                }
+
+                if(data.serverQueue.playing) {
+                    
+                }
+
+                data.serverQueue.songs.shift();
+                Play(data.queue, message.guild, data.serverQueue.songs[0]);
                 break;
             default:
                 message.reply('Invalid argument(s)');
