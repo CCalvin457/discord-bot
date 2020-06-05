@@ -94,10 +94,8 @@ function ValidateVolume(value) {
     console.log(value);
 
     if(Number.isNaN(volume)) {
-        console.log('its NaN');
         returnValue.message = 'You must enter a valid number to set the volume';
     }else if(volume < 0 || volume > 1) {
-        console.log('out of bounds????');
         returnValue.message = 'Please enter a value between 0 and 1';
     } else {
         returnValue.success = true;
@@ -138,7 +136,7 @@ function UpdateNowPlaying(queue, guild, song = null) {
     if(song != null) {
         serverQueue.nowPlaying = song;
     } else {
-        serverQueue.nowPlaying = {}
+        serverQueue.nowPlaying = {};
     }
 
     queue.set(guild.id, serverQueue);
