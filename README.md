@@ -9,6 +9,18 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Viewing song list
 - [x] Get now playing
 
-## Planning to work on
+## I might get to these, probably not
+### Music related
 - [ ] Skip songs
 - [ ] Clear queue
+- [ ] Queue multiple songs at once
+- [ ] Favourite playlists or specific song
+- [ ] Pull songs from youtube playlist via url
+- [ ] Set play duration (music will stop after a certain time)
+- [ ] Specify a start time for a song
+### Others
+- [ ] Get the weather
+- [ ] Set favourite character
+- [ ] Meme generator
+- [ ] Food decision maker
+- [ ] Food generator?
