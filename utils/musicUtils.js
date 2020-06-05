@@ -138,8 +138,6 @@ function UpdateNowPlaying(queue, guild, song = null) {
     } else {
         serverQueue.nowPlaying = {};
     }
-
-    queue.set(guild.id, serverQueue);
 }
 
 module.exports = {

@@ -18,11 +18,13 @@ module.exports = {
 
         switch(data.args[0]) {
             case 'j':
+                // Joins the voice channel
                 JoinChannel(message).then(connection => {
                     UpdateQueue(data.queue, message, voiceChannel, connection);
                 });
                 break;
             case 'l':
+                // Leaves the voice channel
                 if(bot.voice.channel != null) {
                     data.serverQueue.connection = null;
                     data.serverQueue.voiceChannel = null;
@@ -39,6 +41,8 @@ module.exports = {
                 }
                 break;
             case 'p':
+                // Plays a song given a youtube url. If a song is already playing, it will queue the song instead
+                // If no url is given it will play the first song in the queue, provided something is there
                 if(data.args[1] == null && data.serverQueue.songs.length == 0) {
                     return message.reply('Please specify the song you wish to play by entering a youtube url');
                 }
@@ -64,6 +68,7 @@ module.exports = {
                 }
                 break;
             case 'v':
+                // Adjusts the bots volume
                 if(data.args[1] == null) {
                     return message.reply('Please include a value between 0 and 1');
                 }
@@ -77,6 +82,7 @@ module.exports = {
                 SetVolume(data.queue, message, volumeInfo.value);
                 break;
             case 'np':
+                // Displays the currently playing song
                 if(!data.serverQueue.playing) {
                     return message.reply('no song currently playing');
                 }
@@ -91,6 +97,7 @@ module.exports = {
                 message.channel.send(curSongEmbed);
                 break;
             case 'q':
+                // Adds a song into the queue by providing a youtube url
                 if(data.args[1] == null) {
                     return message.reply('Please include a youtube url');
                 }
@@ -103,6 +110,7 @@ module.exports = {
 
                 break;
             case 'list':
+                // Displays the the current song queue
                 const songList = data.serverQueue.songs;
                 console.log(songList);
                 if(songList.length == 0) {
@@ -129,6 +137,7 @@ module.exports = {
 
                 break;
             case 's':
+                // Skips the first song in the queue
                 if(data.serverQueue.songs.length == 0) {
                     return message.reply('There are no songs in the queue.');
                 }
@@ -140,10 +149,16 @@ module.exports = {
                     if(data.serverQueue.songs.length > 0){
                         Play(data.queue, message.guild, data.serverQueue.songs[0]);
                     } else {
-                        data.serverQueue.connection.dispatcher.pause(true);
+                        data.serverQueue.connection.dispatcher.end();
                     }
                 }
                 
+                break;
+            case 'c':
+                // Clears the song queue
+                data.serverQueue.songs = [];
+
+                message.channel.send('All songs have been cleared from the queue');
                 break;
             default:
                 message.reply('Invalid argument(s)');
