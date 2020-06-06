@@ -1,4 +1,5 @@
 const ytdl = require('ytdl-core');
+const fs = require('fs');
 
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
@@ -140,6 +141,19 @@ function UpdateNowPlaying(queue, guild, song = null) {
     }
 }
 
+function LoadMusicCommands() {
+    console.log('hello');
+    const musicCommandCollection = new Map();
+    const musicCommands = fs.readdirSync('./commands/music').filter(file => file.endsWith('.js'));
+
+    for(const file of musicCommands) {
+        const command = require(`../commands/music/${file}`);
+    
+        musicCommandCollection.set(command.name, command);
+    }
+    return musicCommandCollection;
+}
+
 module.exports = {
     JoinChannel,
     CreateQueue,
@@ -147,5 +161,6 @@ module.exports = {
     Play,
     SetVolume,
     ValidateVolume,
-    CreateSongInfo
+    CreateSongInfo,
+    LoadMusicCommands
 }
