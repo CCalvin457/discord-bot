@@ -142,7 +142,7 @@ function UpdateNowPlaying(queue, guild, song = null) {
 }
 
 function LoadMusicCommands() {
-    console.log('hello');
+    console.log('Loading music commands...');
     const musicCommandCollection = new Map();
     const musicCommands = fs.readdirSync('./commands/music').filter(file => file.endsWith('.js'));
 

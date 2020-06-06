@@ -1,4 +1,3 @@
-
 module.exports = {
     name: 'l',
     description: 'Tells the bot to leave the voice channel.',

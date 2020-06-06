@@ -20,6 +20,7 @@ module.exports = {
         }
 
         const argsData = {
+            args: data.args,
             queue: data.queue,
             serverQueue: data.serverQueue,
             voiceChannel: voiceChannel
