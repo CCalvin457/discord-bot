@@ -9,11 +9,11 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Viewing song list
 - [x] Get now playing
 - [x] Skip first song in the queue
+- [x] Skip multiple songs
+- [x] Clear queue
 
 ## I might get to these, probably not
 ### Music related
-- [ ] Skip multiple songs
-- [ ] Clear queue
 - [ ] Repeat current song
 - [ ] Queue multiple songs at once
 - [ ] Favourite playlists or specific song

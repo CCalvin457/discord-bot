@@ -20,7 +20,7 @@ If no url is given it will play the first song in the queue, provided something 
             return message.reply(`${song.title} has been added to the queue!`);
         }
 
-        if(bot.voice.channel == null || bot.voice.channel != voiceChannel) {
+        if(bot.voice.channel == null || bot.voice.channel != data.voiceChannel) {
             JoinChannel(message).then(connection => {
                 UpdateQueue(data.queue, message, data.voiceChannel, connection);
                 Play(data.queue, message.guild, data.serverQueue.songs[0]);

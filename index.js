@@ -12,6 +12,8 @@ client.commands = new Discord.Collection();
 
 // Looking for all .js files inside the commands folder
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+// Server queue to keep track of each servers song list and channel info
 const queue = new Map();
 
 // Adding all commands into the empty collection, 'client.commands'

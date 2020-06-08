@@ -1,6 +1,4 @@
-const { JoinChannel, CreateQueue, UpdateQueue, Play, SetVolume, ValidateVolume, CreateSongInfo, LoadMusicCommands } = require('../utils/musicUtils.js');
-const ytdl = require('ytdl-core');
-const Discord = require('discord.js');
+const { CreateQueue, LoadMusicCommands } = require('../utils/musicUtils.js');
 
 let musicCommands = new Map();
 

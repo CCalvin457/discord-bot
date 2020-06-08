@@ -46,8 +46,7 @@ function Play(queue, guild, song) {
     const serverQueue = queue.get(guild.id);
 
     if(!song) {
-        UpdatePlaying(queue, guild, false);
-        UpdateNowPlaying(queue, guild)
+        UpdatePlaying(queue, guild);
         return;
     }
 
@@ -65,8 +64,7 @@ function Play(queue, guild, song) {
     
     dispatcher.setVolumeLogarithmic(serverQueue.volume);
     serverQueue.textChannel.send(`Now Playing: ***${song.title}***`);
-    UpdatePlaying(queue, guild, true);
-    UpdateNowPlaying(queue, guild, song);
+    UpdatePlaying(queue, guild, song);
 }
 
 function SetVolume(queue, message, value) {
@@ -123,22 +121,18 @@ async function CreateSongInfo(url) {
     return song;
 }
 
-function UpdatePlaying(queue, guild, isPlaying) {
-    const serverQueue = queue.get(guild.id);
-
-    serverQueue.playing = isPlaying;
-
-    queue.set(guild.id, serverQueue);
-}
-
-function UpdateNowPlaying(queue, guild, song = null) {
+function UpdatePlaying(queue, guild, song = null) {
     const serverQueue = queue.get(guild.id);
 
     if(song != null) {
+        serverQueue.playing = true;
         serverQueue.nowPlaying = song;
     } else {
+        serverQueue.playing = false;
         serverQueue.nowPlaying = {};
     }
+
+    queue.set(guild.id, serverQueue);
 }
 
 function LoadMusicCommands() {
