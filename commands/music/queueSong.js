@@ -8,10 +8,20 @@ module.exports = {
             return message.reply('Please include a youtube url');
         }
 
-        const song = await CreateSongInfo(data.args[1]);
+        let song = {};
+        
+        
+        try {
+            // Try to create song info from given url
+            song = await CreateSongInfo(data.args[1]); 
+        } catch(error) {
+            // error should occur when the url given is invalid
+            return message.reply(error);
+        }
 
+        console.log(`Pushing song into the queue...`);
         data.serverQueue.songs.push(song);
+        return message.reply(`${song.title} has been added to the queue!`);
 
-        message.reply(`${song.title} has been added to the queue!`);
     }
 }

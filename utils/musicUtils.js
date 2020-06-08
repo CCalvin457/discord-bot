@@ -4,16 +4,28 @@ const { Repeat } = require('./repeatEnum.js');
 
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
-
-    if(!voiceChannel) {
-        return message.reply('You need to be in a voice channel first!');
+    var connection;
+    try {
+        connection = await voiceChannel.join();
+    } catch(error) {
+        if(!voiceChannel) {
+            throw 'You need to be in a voice channel first!';
+        }
+        const permissions = voiceChannel.permissionsFor(message.client.user);
+        if(!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+            throw 'I need the permissions to join and speak in your voice channel!';
+        }
     }
-    const permissions = voiceChannel.permissionsFor(message.client.user);
-    if(!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-        return message.reply('I need the permissions to join and speak in your voice channel!');
-    }
 
-    const connection = await voiceChannel.join();
+    // if(!voiceChannel) {
+    //     return message.reply('You need to be in a voice channel first!');
+    // }
+    // const permissions = voiceChannel.permissionsFor(message.client.user);
+    // if(!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
+    //     return message.reply('I need the permissions to join and speak in your voice channel!');
+    // }
+
+    // const connection = await voiceChannel.join();
 
     return connection;
 }
@@ -101,7 +113,7 @@ function ValidateVolume(value) {
         message: ''
     }
 
-    console.log(value);
+    console.log(`Setting volume to: ${value}`);
 
     if(Number.isNaN(volume)) {
         returnValue.message = 'You must enter a valid number to set the volume';
@@ -125,10 +137,9 @@ async function CreateSongInfo(url) {
             url: songInfo.videoDetails.video_url
         }
     } catch(error) {
-        console.error(error);
-        return;
+        throw `${url} is not a valid youtube url.`;
     }
-
+    console.log('returning song...');
     return song;
 }
 
