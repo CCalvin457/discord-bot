@@ -17,7 +17,7 @@ module.exports = {
                 currentSongs.splice(0, value || currentSongs.length);
                 message.channel.send(`Songs skipped!`);
             } else {
-                return message.reply('Please enter a valid number');
+                return message.reply('Please enter a valid number.');
             }
         } else {
             let skippedSong = currentSongs.shift();

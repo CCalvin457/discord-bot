@@ -1,5 +1,6 @@
 const ytdl = require('ytdl-core');
 const fs = require('fs');
+const { Repeat } = require('./repeatEnum.js');
 
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
@@ -25,7 +26,8 @@ function CreateQueue(queue, message, voiceChannel = null, connection = null) {
         songs: [],
         volume: 0.5,
         playing: false,
-        nowPlaying: {}
+        nowPlaying: {},
+        repeat: 'off'
     }
 
     queue.set(message.guild.id, queueConstruct);
@@ -55,7 +57,16 @@ function Play(queue, guild, song) {
     const dispatcher = serverQueue.connection
         .play(ytdl(song.url, {filter: "audioonly"}))
         .on('finish', () => {
-            serverQueue.songs.shift();
+            let currentSong = serverQueue.songs.shift();
+
+            if(serverQueue.repeat == Repeat.On) {
+                serverQueue.songs.push(currentSong);
+            }
+            
+            if(serverQueue.repeat == Repeat.One) {
+                serverQueue.songs.unshift(currentSong);
+            }
+
             Play(queue, guild, serverQueue.songs[0]);
         })
         .on('error', error => {
@@ -156,5 +167,6 @@ module.exports = {
     SetVolume,
     ValidateVolume,
     CreateSongInfo,
+    UpdatePlaying,
     LoadMusicCommands
 }
