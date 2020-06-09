@@ -4,11 +4,11 @@ module.exports = {
     name: 'v',
     description: 'Adjusts the volume of the bot',
     execute(message, data) {
-        if(data.args[1] == null) {
+        if(data.args[0] == null) {
             return message.reply('Please include a value between 0 and 1');
         }
 
-        const volumeInfo = ValidateVolume(data.args[1]);
+        const volumeInfo = ValidateVolume(data.args[0]);
 
         if(!volumeInfo.success) {
             return message.reply(volumeInfo.message);

@@ -9,6 +9,7 @@ module.exports = {
         if(!message.guild) return;
 
         const voiceChannel = message.member.voice.channel;
+        const commandName = data.args.shift();
 
         if(!data.serverQueue) {
             CreateQueue(data.queue, message);
@@ -26,9 +27,9 @@ module.exports = {
             musicCommands = LoadMusicCommands();
         }
 
-        if(!musicCommands.has(data.args[0])) return message.reply(`${data.args[0]} is an invalid argument for the music command.`);
+        if(!musicCommands.has(commandName)) return message.reply(`${commandName} is an invalid argument for the music command.`);
 
-        const command = musicCommands.get(data.args[0]);
+        const command = musicCommands.get(commandName);
 
         try{
             command.execute(message, argsData);

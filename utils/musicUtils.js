@@ -5,6 +5,7 @@ const { Repeat } = require('./repeatEnum.js');
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
     var connection;
+
     try {
         connection = await voiceChannel.join();
     } catch(error) {
@@ -16,16 +17,6 @@ async function JoinChannel(message) {
             throw 'I need the permissions to join and speak in your voice channel!';
         }
     }
-
-    // if(!voiceChannel) {
-    //     return message.reply('You need to be in a voice channel first!');
-    // }
-    // const permissions = voiceChannel.permissionsFor(message.client.user);
-    // if(!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
-    //     return message.reply('I need the permissions to join and speak in your voice channel!');
-    // }
-
-    // const connection = await voiceChannel.join();
 
     return connection;
 }
@@ -170,6 +161,30 @@ function LoadMusicCommands() {
     return musicCommandCollection;
 }
 
+async function QueueSongs(queue, message, songs) {
+    const serverQueue = queue.get(message.guild.id);
+    let formattedSongs = songs.map(async url => {
+        try {
+            const song = await CreateSongInfo(url);
+            return song;
+        } catch(error) {
+            return error;
+        }
+    });
+
+    const resolvedSongQueue = await Promise.all(formattedSongs);
+    
+    resolvedSongQueue.forEach(song => {
+        if(typeof(song) !== 'object' || song === null) {
+            console.log(typeof(song));
+            return message.reply(`${song} is not a valid youtube url.`);
+        }
+        serverQueue.songs.push(song);
+        message.channel.send(`${song.title} has been added to the queue!`);
+    });
+
+}
+
 module.exports = {
     JoinChannel,
     CreateQueue,
@@ -177,7 +192,7 @@ module.exports = {
     Play,
     SetVolume,
     ValidateVolume,
-    CreateSongInfo,
     UpdatePlaying,
-    LoadMusicCommands
+    LoadMusicCommands,
+    QueueSongs
 }

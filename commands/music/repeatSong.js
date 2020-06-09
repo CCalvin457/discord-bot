@@ -3,7 +3,7 @@ module.exports = {
     name: 'r',
     description: 'Manages song repeat',
     execute(message, data) {
-        let argument = data.args[1] == null ? null : data.args[1].toLowerCase();
+        let argument = data.args[0] == null ? null : data.args[0].toLowerCase();
         
         if(argument === null ||
             !(argument === Repeat.On || argument === Repeat.One || argument === Repeat.Off)) {

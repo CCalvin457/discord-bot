@@ -9,7 +9,7 @@ module.exports = {
         }
 
         const currentSongs = data.serverQueue.songs
-        let value = data.args[1];
+        let value = data.args[0];
 
         if(value != null) {
             if(!isNaN(value)) {
