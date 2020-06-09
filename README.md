@@ -12,10 +12,10 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Skip multiple songs
 - [x] Clear queue
 - [x] Repeat current song or repeat entire song list
+- [x] Queue multiple songs at once
 
 ## I might get to these, probably not
 ### Music related
-- [ ] Queue multiple songs at once
 - [ ] Favourite playlists or specific song
 - [ ] Pull songs from youtube playlist via url
 - [ ] Set play duration (music will stop after a certain time)
