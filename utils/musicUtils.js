@@ -163,6 +163,8 @@ function LoadMusicCommands() {
 
 async function QueueSongs(queue, message, songs) {
     const serverQueue = queue.get(message.guild.id);
+
+    // Create song info and add them into 'formattedSongs' array
     let formattedSongs = songs.map(async url => {
         try {
             const song = await CreateSongInfo(url);
@@ -172,8 +174,10 @@ async function QueueSongs(queue, message, songs) {
         }
     });
 
+    // Wait for all song info inside 'formattedSongs' are completed and save them into 'resolvedSongQueue'
     const resolvedSongQueue = await Promise.all(formattedSongs);
     
+    // Add songs into the song queue or let the user know that they added an invalid youtube url
     resolvedSongQueue.forEach(song => {
         if(typeof(song) !== 'object' || song === null) {
             console.log(typeof(song));
