@@ -176,8 +176,6 @@ async function QueueSongs(queue, message, songs) {
 
     // Wait for all song info inside 'formattedSongs' are completed and save them into 'resolvedSongQueue'
     const resolvedSongQueue = await Promise.all(formattedSongs);
-
-    console.log(resolvedSongQueue);
     
     // Add songs into the song queue or let the user know that they added an invalid youtube url
     resolvedSongQueue.forEach(song => {
@@ -200,7 +198,7 @@ function QueuePlaylist(queue, message, songs) {
     songInfo.forEach(song => {
         serverQueue.songs.push(song);
     });
-    
+
     message.channel.send(`${songInfo.length} songs have been added to the queue!`);
 }
 
