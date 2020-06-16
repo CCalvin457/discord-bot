@@ -119,7 +119,7 @@ function ValidateVolume(value) {
     return returnValue;
 }
 
-async function CreateSongInfo(url) {
+async function CreateSongInfoFromUrl(url) {
     var songInfo, song = {};
     try {
         songInfo = await ytdl.getInfo(url);
@@ -167,7 +167,7 @@ async function QueueSongs(queue, message, songs) {
     // Create song info and add them into 'formattedSongs' array
     let formattedSongs = songs.map(async url => {
         try {
-            const song = await CreateSongInfo(url);
+            const song = await CreateSongInfoFromUrl(url);
             return song;
         } catch(error) {
             return error;
@@ -176,17 +176,32 @@ async function QueueSongs(queue, message, songs) {
 
     // Wait for all song info inside 'formattedSongs' are completed and save them into 'resolvedSongQueue'
     const resolvedSongQueue = await Promise.all(formattedSongs);
+
+    console.log(resolvedSongQueue);
     
     // Add songs into the song queue or let the user know that they added an invalid youtube url
     resolvedSongQueue.forEach(song => {
         if(typeof(song) !== 'object' || song === null) {
             console.log(typeof(song));
-            return message.reply(`${song} is not a valid youtube url.`);
+            return message.reply(song);
         }
         serverQueue.songs.push(song);
         message.channel.send(`${song.title} has been added to the queue!`);
     });
+}
 
+function QueuePlaylist(queue, message, songs) {
+    const serverQueue = queue.get(message.guild.id);
+
+    let songInfo = songs.map(song => {
+        return {title: song.title, url: song.url};
+    });
+
+    songInfo.forEach(song => {
+        serverQueue.songs.push(song);
+    });
+    
+    message.channel.send(`${songInfo.length} songs have been added to the queue!`);
 }
 
 module.exports = {
@@ -198,5 +213,6 @@ module.exports = {
     ValidateVolume,
     UpdatePlaying,
     LoadMusicCommands,
-    QueueSongs
+    QueueSongs,
+    QueuePlaylist
 }
