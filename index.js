@@ -13,8 +13,8 @@ client.commands = new Discord.Collection();
 // Looking for all .js files inside the commands folder
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
-// Server queue to keep track of each servers song list and channel info
-const queue = new Map();
+// Server list to keep track of each servers song list and channel info
+const serverList = new Map();
 
 // Adding all commands into the empty collection, 'client.commands'
 for(const file of commandFiles) {
@@ -30,14 +30,14 @@ client.once('ready', () => {
 client.on('message', async msg => {
     if(!msg.content.startsWith(process.env.PREFIX) || msg.author.bot) return;
 
-    let serverQueue = queue.get(msg.guild.id);
+    let serverInfo = serverList.get(msg.guild.id);
     const args = msg.content.slice(process.env.PREFIX.length).split(' ');
     const commandName = args.shift().toLowerCase();
 
     const data = {
         args: args,
-        serverQueue: serverQueue,
-        queue: queue
+        serverInfo: serverInfo,
+        serverList: serverList
     }
 
     if(!client.commands.has(commandName)) return;

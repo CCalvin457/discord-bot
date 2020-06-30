@@ -10,7 +10,8 @@ module.exports = {
             return message.reply(`Please specify argument for repeat [on|one|off]`);
         }
 
-        data.serverQueue.repeat = argument;
+        data.serverInfo.repeat = argument;
+        data.serverList.set(message.guild.id, data.serverInfo);
 
         if(argument === Repeat.On) {
             message.channel.send(`Repeating whole playlist.`);

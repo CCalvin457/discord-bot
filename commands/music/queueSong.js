@@ -21,7 +21,7 @@ module.exports = {
                 const playlist = await ytpl(playlistUrl);
 
                 songList = playlist.items;
-                QueuePlaylist(data.queue, message, songList);
+                QueuePlaylist(data.serverList, message, songList);
             } catch(error) {
                 return message.reply(`${playlistUrl} is not a valid youtube playlist url or id`);
             }
@@ -29,7 +29,7 @@ module.exports = {
         } else {
             // Queues song(s) via youtube url
             songList = data.args;
-            QueueSongs(data.queue, message, songList);
+            QueueSongs(data.serverList, message, songList);
         }
     }
 }

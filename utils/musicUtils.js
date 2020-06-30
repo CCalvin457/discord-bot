@@ -1,7 +1,6 @@
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
-const Discord = require('discord.js');
 
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
@@ -22,78 +21,39 @@ async function JoinChannel(message) {
     return connection;
 }
 
-function CreateQueue(queue, message, voiceChannel = null, connection = null) {
-    const queueConstruct = {
-        textChannel: message.channel,
-        voiceChannel: voiceChannel,
-        connection: connection,
-        songs: [],
-        volume: 0.5,
-        playing: false,
-        nowPlaying: {},
-        repeat: 'off'
-    }
-
-    queue.set(message.guild.id, queueConstruct);
-}
-
-function UpdateQueue(queue, message, voiceChannel, connection) {
-    const serverQueue = queue.get(message.guild.id);
-
-    serverQueue.textChannel = message.channel;
-    serverQueue.voiceChannel = voiceChannel;
-    serverQueue.connection = connection;
-
-    queue.set(message.guild.id, serverQueue);
-}
-
-
-function Play(queue, guild, song) {
-    const serverQueue = queue.get(guild.id);
+function Play(serverList, guild, song) {
+    console.log('hello');
+    const serverInfo = serverList.get(guild.id);
 
     if(!song) {
-        UpdatePlaying(queue, guild);
+        serverInfo.UpdatePlaying(guild.id, serverList);
         return;
     }
 
     console.log(song);
 
-    const dispatcher = serverQueue.connection
+    const dispatcher = serverInfo.connection
         .play(ytdl(song.url, {filter: "audioonly"}))
         .on('finish', () => {
-            let currentSong = serverQueue.songs.shift();
+            let currentSong = serverInfo.songs.shift();
 
-            if(serverQueue.repeat == Repeat.On) {
-                serverQueue.songs.push(currentSong);
+            if(serverInfo.repeat == Repeat.On) {
+                serverInfo.songs.push(currentSong);
             }
             
-            if(serverQueue.repeat == Repeat.One) {
-                serverQueue.songs.unshift(currentSong);
+            if(serverInfo.repeat == Repeat.One) {
+                serverInfo.songs.unshift(currentSong);
             }
 
-            Play(queue, guild, serverQueue.songs[0]);
+            Play(serverList, guild, serverInfo.songs[0]);
         })
         .on('error', error => {
             console.error(error);
         });
     
-    dispatcher.setVolumeLogarithmic(serverQueue.volume);
-    serverQueue.textChannel.send(`Now Playing: ***${song.title}***`);
-    UpdatePlaying(queue, guild, song);
-}
-
-function SetVolume(queue, message, value) {
-    const serverQueue = queue.get(message.guild.id);
-
-    if(serverQueue.connection) {
-        serverQueue.connection.dispatcher.setVolumeLogarithmic(value);
-    }
-
-    serverQueue.volume = value;
-
-    queue.set(message.guild.id, serverQueue);
-
-    return message.channel.send(`Volume has been set to ${(value * 100)}%`);
+    dispatcher.setVolumeLogarithmic(serverInfo.volume);
+    serverInfo.textChannel.send(`Now Playing: ***${song.title}***`);
+    serverInfo.UpdatePlaying(guild.id, serverList, song);
 }
 
 function ValidateVolume(value) {
@@ -135,20 +95,6 @@ async function CreateSongInfoFromUrl(url) {
     return song;
 }
 
-function UpdatePlaying(queue, guild, song = null) {
-    const serverQueue = queue.get(guild.id);
-
-    if(song != null) {
-        serverQueue.playing = true;
-        serverQueue.nowPlaying = song;
-    } else {
-        serverQueue.playing = false;
-        serverQueue.nowPlaying = {};
-    }
-
-    queue.set(guild.id, serverQueue);
-}
-
 function LoadMusicCommands() {
     console.log('Loading music commands...');
     const musicCommandCollection = new Map();
@@ -162,8 +108,8 @@ function LoadMusicCommands() {
     return musicCommandCollection;
 }
 
-async function QueueSongs(queue, message, songs) {
-    const serverQueue = queue.get(message.guild.id);
+async function QueueSongs(serverList, message, songs) {
+    const serverInfo = serverList.get(message.guild.id);
 
     // Create song info and add them into 'formattedSongs' array
     let formattedSongs = songs.map(async url => {
@@ -184,34 +130,34 @@ async function QueueSongs(queue, message, songs) {
             console.log(typeof(song));
             return message.reply(song);
         }
-        serverQueue.songs.push(song);
+        serverInfo.songs.push(song);
         message.channel.send(`${song.title} has been added to the queue!`);
     });
+
+    serverList.set(message.guild.id, serverInfo);
 }
 
-function QueuePlaylist(queue, message, songs) {
-    const serverQueue = queue.get(message.guild.id);
+function QueuePlaylist(serverList, message, songs) {
+    const serverInfo = serverList.get(message.guild.id);
 
     let songInfo = songs.map(song => {
         return {title: song.title, url: song.url};
     });
 
     songInfo.forEach(song => {
-        serverQueue.songs.push(song);
+        serverInfo.songs.push(song);
     });
 
     message.channel.send(`${songInfo.length} songs have been added to the queue!`);
+
+    serverList.set(message.guild.id, serverInfo);
 }
 
 
 module.exports = {
     JoinChannel,
-    CreateQueue,
-    UpdateQueue,
     Play,
-    SetVolume,
     ValidateVolume,
-    UpdatePlaying,
     LoadMusicCommands,
     QueueSongs,
     QueuePlaylist

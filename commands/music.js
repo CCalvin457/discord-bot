@@ -1,4 +1,5 @@
-const { CreateQueue, LoadMusicCommands } = require('../utils/musicUtils.js');
+const { LoadMusicCommands } = require('../utils/musicUtils.js');
+const Server = require('../utils/serverInfo.js');
 
 let musicCommands = new Map();
 
@@ -11,15 +12,19 @@ module.exports = {
         const voiceChannel = message.member.voice.channel;
         const commandName = data.args.shift();
 
-        if(!data.serverQueue) {
-            CreateQueue(data.queue, message);
-            data.serverQueue = data.queue.get(message.guild.id);
+        if(!data.serverInfo) {
+            // Create new serverinfo instance if it doesn't exist for the discord server
+            let server = new Server(message);
+
+            data.serverList.set(message.guild.id, server);
+
+            data.serverInfo = server;
         }
 
         const argsData = {
             args: data.args,
-            queue: data.queue,
-            serverQueue: data.serverQueue,
+            serverList: data.serverList,
+            serverInfo: data.serverInfo,
             voiceChannel: voiceChannel
         }
         

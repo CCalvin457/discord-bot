@@ -4,12 +4,7 @@ module.exports = {
     execute(message, data) {
         const bot = message.guild.me;
         if(bot.voice.channel != null) {
-            data.serverQueue.connection = null;
-            data.serverQueue.voiceChannel = null;
-            data.serverQueue.playing = false;
-            data.serverQueue.nowPlaying = {};
-
-            data.queue.set(message.guild.id, data.serverQueue);
+            data.serverInfo.ClearServerConnectionInfo(data.serverList, message.guild.id);
 
             bot.voice.channel.leave();
             
