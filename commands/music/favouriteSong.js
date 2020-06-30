@@ -16,8 +16,8 @@ module.exports = {
             return message.reply(`${song} is not a valid youtube url!`);
         }
 
+        const songInfo = await ytdl.getBasicInfo(song);
         if(data.args[0] === null || data.args[0] === undefined) {
-            const songInfo = await ytdl.getBasicInfo(song);
             alias = songInfo.videoDetails.title;
         } else {
             data.args.forEach(arg => {
@@ -27,10 +27,12 @@ module.exports = {
             alias = alias.trim();
         }
 
-        database.collection('favouriteSongs').doc(guildID).set({
-            [alias]: song
+        database.collection('servers').doc(guildID).collection('favouriteSongs').doc(songInfo.videoDetails.videoId).set({
+            url: songInfo.videoDetails.video_url,
+            songTitle: songInfo.videoDetails.title,
+            name: alias
         }, { merge: true });
 
-        message.reply(`${alias} has been favourited!`);
+        message.reply(`'${alias}' has been favourited!`);
     }
 }

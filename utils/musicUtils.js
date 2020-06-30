@@ -1,6 +1,7 @@
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
+const Discord = require('discord.js');
 
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
@@ -201,6 +202,7 @@ function QueuePlaylist(queue, message, songs) {
 
     message.channel.send(`${songInfo.length} songs have been added to the queue!`);
 }
+
 
 module.exports = {
     JoinChannel,
