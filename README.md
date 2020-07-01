@@ -26,3 +26,4 @@ Just a personal project, messing around with discord bots and discord.js
 - [ ] Meme generator
 - [ ] Food decision maker
 - [ ] Food generator?
+- [ ] Add help command
