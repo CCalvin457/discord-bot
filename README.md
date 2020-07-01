@@ -14,10 +14,10 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Repeat current song or repeat entire song list
 - [x] Queue multiple songs at once
 - [x] Pull songs from youtube playlist via url
+- [x] Favourite specific song
 
 ## I might get to these, probably not
 ### Music related
-- [ ] Favourite playlists or specific song
 - [ ] Set play duration (music will stop after a certain time)
 - [ ] Specify a start time for a song
 ### Others
