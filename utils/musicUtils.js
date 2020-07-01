@@ -1,6 +1,7 @@
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
+const Discord = require('discord.js');
 
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
@@ -108,8 +109,8 @@ function LoadMusicCommands() {
     return musicCommandCollection;
 }
 
-async function QueueSongs(serverList, message, songs) {
-    const serverInfo = serverList.get(message.guild.id);
+async function CreateSongList(message, songs) {
+    let finalSongList = [];
 
     // Create song info and add them into 'formattedSongs' array
     let formattedSongs = songs.map(async url => {
@@ -127,9 +128,20 @@ async function QueueSongs(serverList, message, songs) {
     // Add songs into the song queue or let the user know that they added an invalid youtube url
     resolvedSongQueue.forEach(song => {
         if(typeof(song) !== 'object' || song === null) {
-            console.log(typeof(song));
             return message.reply(song);
         }
+        finalSongList.push(song);
+    });
+    
+    return finalSongList;
+}
+
+async function QueueSongs(serverList, message, songs) {
+    const serverInfo = serverList.get(message.guild.id);
+
+    const songList = await CreateSongList(message, songs);
+
+    songList.forEach(song => {
         serverInfo.songs.push(song);
         message.channel.send(`${song.title} has been added to the queue!`);
     });
@@ -153,12 +165,28 @@ function QueuePlaylist(serverList, message, songs) {
     serverList.set(message.guild.id, serverInfo);
 }
 
+function SongListForEmbed(songs) {
+    const songList = [];
+
+    for(var i = 0; i < songs.length; i++) {
+        let curSong = songs[i];
+        songList.push({
+            name: `${i + 1}. ${curSong.title}`,
+            value: curSong.url
+        });
+    }
+
+    return songList;
+}
+
 
 module.exports = {
     JoinChannel,
     Play,
     ValidateVolume,
     LoadMusicCommands,
+    CreateSongList,
     QueueSongs,
-    QueuePlaylist
+    QueuePlaylist,
+    SongListForEmbed
 }

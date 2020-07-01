@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const { SongListForEmbed } = require('../../utils/musicUtils.js');
 
 module.exports = {
     name: 'list',
@@ -11,21 +12,13 @@ module.exports = {
             return message.channel.send('There are currently no songs in the queue.');
         }
 
-        const songs = [];
-
-        for(var i = 0; i < songList.length; i++) {
-            let curSong = songList[i];
-            songs.push({
-                name: `${i + 1}. ${curSong.title}`,
-                value: curSong.url
-            });
-        }
+        const songs = SongListForEmbed(songList);
 
         const musicListEmbed = new Discord.MessageEmbed()
             .setColor('#0099ff')
             .setTitle('Song List')
             .setDescription('Songs currently in the queue')
-            .addFields(songs)
+            .addFields(songs);
 
         message.channel.send(musicListEmbed);
     }

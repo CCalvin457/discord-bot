@@ -29,7 +29,7 @@ module.exports = {
         } else {
             // Queues song(s) via youtube url
             songList = data.args;
-            QueueSongs(data.serverList, message, songList);
+            await QueueSongs(data.serverList, message, songList);
         }
     }
 }

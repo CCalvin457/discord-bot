@@ -29,7 +29,7 @@ module.exports = {
 
         database.collection('servers').doc(guildID).collection('favouriteSongs').doc(songInfo.videoDetails.videoId).set({
             url: songInfo.videoDetails.video_url,
-            songTitle: songInfo.videoDetails.title,
+            title: songInfo.videoDetails.title,
             name: alias
         }, { merge: true });
 

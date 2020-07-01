@@ -1,5 +1,6 @@
-const { JoinChannel, Play, UpdateQueue, QueueSongs } = require('../../utils/musicUtils.js');
+const { JoinChannel, Play, CreateSongList, QueueSongs, SongListForEmbed } = require('../../utils/musicUtils.js');
 const { database } = require('../../utils/firestore.js');
+const Discord = require('discord.js');
 module.exports = {
     name: 'p',
     description: `Plays a song given a youtube url. If a song is already playing, it will queue the song instead
@@ -30,14 +31,43 @@ If no url is given it will play the first song in the queue, provided something 
                     if(results.docs.length === 1) {
                         song = results.docs[0].data().url;
                     } else {
+                        // If there are multiple songs which have the same name, we let the user select which song to play or add to the queue
+                        // Maybe separate some of these into their own functions?
                         let querySongs = [];
                         results.docs.forEach(result => {
                             querySongs.push(result.data());
                         });
+
+                        const songList = SongListForEmbed(querySongs);
+
+                        // filter for user input
+                        const filter = response => {
+                            return !isNaN(response.content) && (response.content > 0 && response.content <= querySongs.length);
+                        }
+
+                        const songListEmbed = new Discord.MessageEmbed()
+                            .setColor('#0099ff')
+                            .setTitle('Song List')
+                            .setDescription('Which song did you want to play?')
+                            .addFields(songList);
                         
-                        querySongs.forEach(song => {
-                            console.log(song);
-                        });
+                        // Allows users to input a number to select which song to play or add to the queue
+                        message.channel.send(songListEmbed);
+
+                        const songSelect = await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
+                            .then(collected => {
+                                const index = collected.first().content - 1;
+                                return querySongs[index];
+                            })
+                            .catch(() => {
+                                return false;
+                            });
+
+                        if(!songSelect) {
+                            return message.channel.send('Song selection timed out.');
+                        } else {
+                            song = songSelect.url;
+                        }
                     }
                 } else {
                     return message.reply(`Could not find '${query}'.`);
@@ -55,9 +85,7 @@ If no url is given it will play the first song in the queue, provided something 
             });
         } else {
             console.log('already in correct channel');
-            console.log(data.serverInfo.playing);
             if(!data.serverInfo.playing) {
-                console.log('wat');
                 Play(data.serverList, message.guild, songs[0]);
             }
         }
