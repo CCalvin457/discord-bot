@@ -1,0 +1,29 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "Messing around with discord bots",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "firebase-admin": "^8.12.1",
+    "ffmpeg-static": "^4.2.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "ytdl-core": "^3.0.0",
+    "ytpl": "^0.1.21"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CCalvin457/discord-bot.git"
+  },
+  "author": "Calvin Cheung",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CCalvin457/discord-bot/issues"
+  },
+  "homepage": "https://github.com/CCalvin457/discord-bot#readme"
+}
