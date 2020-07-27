@@ -49,6 +49,7 @@ function Play(serverList, guild, song) {
             Play(serverList, guild, serverInfo.songs[0]);
         })
         .on('error', error => {
+            serverInfo.UpdatePlaying(guild.id, serverList);
             console.error(error);
         });
     

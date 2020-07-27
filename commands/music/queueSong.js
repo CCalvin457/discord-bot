@@ -18,7 +18,7 @@ module.exports = {
             }
 
             try {
-                const playlist = await ytpl(playlistUrl);
+                const playlist = await ytpl(playlistUrl, {limit: 0});
 
                 songList = playlist.items;
                 QueuePlaylist(data.serverList, message, songList);

@@ -1,6 +1,6 @@
 class Server {
     _songs = [];
-    _volume = 0.5;
+    _volume = 0.1;
     _playing = false;
     _nowPlaying = {};
     _repeat = 'off';

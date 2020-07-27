@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
+const Server = require('./utils/serverInfo.js');
 
 const client = new Discord.Client();
 dotenv.config();
@@ -31,6 +32,12 @@ client.on('message', async msg => {
     if(!msg.content.startsWith(process.env.PREFIX) || msg.author.bot) return;
 
     let serverInfo = serverList.get(msg.guild.id);
+
+    if(!serverInfo) {
+        serverInfo = new Server(msg);
+        serverList.set(msg.guild.id, serverInfo);
+    }
+    
     const args = msg.content.slice(process.env.PREFIX.length).split(' ');
     const commandName = args.shift().toLowerCase();
 
