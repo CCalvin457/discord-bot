@@ -1,4 +1,3 @@
-const Discord = require('discord.js');
 const { SongListForEmbed } = require('../../utils/musicUtils.js');
 const EmbedData = require('../../utils/embedData.js');
 const { GenerateEmbed } = require('../../utils/generalUtil.js');
