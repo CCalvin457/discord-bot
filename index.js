@@ -2,8 +2,6 @@ const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const Server = require('./utils/serverInfo.js');
-const help = require('./commands/help.js');
-const { sub } = require('ffmpeg-static');
 
 const client = new Discord.Client();
 dotenv.config();
