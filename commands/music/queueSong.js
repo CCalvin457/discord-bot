@@ -5,6 +5,7 @@ module.exports = {
     name: 'q',
     description: 'Adds a song (youtube url or playlist) into the song queue',
     async execute(message, data) {
+        const serverList = data.serverList;
         var songList;
         if(data.args[0] == null) {
             return message.reply('Please include a youtube url');
@@ -21,7 +22,7 @@ module.exports = {
                 const playlist = await ytpl(playlistUrl, {limit: 0});
 
                 songList = playlist.items;
-                QueuePlaylist(data.serverList, message, songList);
+                QueuePlaylist(serverList, message, songList);
             } catch(error) {
                 return message.reply(`${playlistUrl} is not a valid youtube playlist url or id`);
             }
@@ -29,7 +30,7 @@ module.exports = {
         } else {
             // Queues song(s) via youtube url
             songList = data.args;
-            await QueueSongs(data.serverList, message, songList);
+            await QueueSongs(serverList, message, songList);
         }
     }
 }

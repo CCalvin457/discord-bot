@@ -3,8 +3,10 @@ module.exports = {
     description: 'Tells the bot to leave the voice channel.',
     execute(message, data) {
         const bot = message.guild.me;
+        const serverInfo = data.serverInfo;
+        const serverList = data.serverList;
         if(bot.voice.channel != null) {
-            data.serverInfo.ClearServerConnectionInfo(data.serverList, message.guild.id);
+            serverInfo.ClearServerConnectionInfo(serverList, message.guild.id);
 
             bot.voice.channel.leave();
             

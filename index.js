@@ -80,14 +80,25 @@ client.on('message', async msg => {
     const args = msg.content.slice(process.env.PREFIX.length).split(' ');
     const commandName = args.shift().toLowerCase();
 
+    // we will change this object based on what data the command will need 
+    // (e.g. if its the music command we'll send serverInfo and serverList)
+    let commandData = {};
+
+    if(commandName === 'music') {
+        commandData = {
+            serverInfo: serverInfo,
+            serverList: serverList
+        }
+    }
+
+    // Data object that will be passed as a parameter in order to execute the given command
     const data = {
         args: args,
         help: commandHelp,
-        serverInfo: serverInfo,
-        serverList: serverList
+        commandData: commandData
     }
 
-    if(!client.commands.has(commandName)) return;
+    if(!client.commands.has(commandName)) return msg.reply(`'${commandName}' is not a valid command! To view a list of commands you can use the \`!help\` command.`);
 
     const command = client.commands.get(commandName);
 

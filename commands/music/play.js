@@ -7,8 +7,10 @@ module.exports = {
 If no url is given it will play the first song in the queue, provided something is there`,
     async execute(message, data) {
         const bot = message.guild.me;
-        let songs = data.serverInfo.songs;
-        if(data.args[0] == null && data.serverInfo.songs.length == 0) {
+        const serverInfo = data.serverInfo;
+        const serverList = data.serverList;
+        let songs = serverInfo.songs;
+        if(data.args[0] == null && songs.length == 0) {
             return message.reply('Please specify the song you wish to play by entering a youtube url');
         }
         
@@ -73,20 +75,20 @@ If no url is given it will play the first song in the queue, provided something 
                     return message.reply(`Could not find '${query}'.`);
                 }
             }
-            await QueueSongs(data.serverList, message, [song]);
+            await QueueSongs(serverList, message, [song]);
         }
 
         if(bot.voice.channel == null || bot.voice.channel != data.voiceChannel) {
             JoinChannel(message).then(connection => {
-                data.serverInfo.UpdateServerConnectionInfo(data.serverList, message, data.voiceChannel, connection);
-                Play(data.serverList, message.guild, songs[0]);
+                serverInfo.UpdateServerConnectionInfo(serverList, message, data.voiceChannel, connection);
+                Play(serverList, message.guild, songs[0]);
             }).catch(error => {
                 return message.reply(error);
             });
         } else {
             console.log('already in correct channel');
-            if(!data.serverInfo.playing) {
-                Play(data.serverList, message.guild, songs[0]);
+            if(!serverInfo.playing) {
+                Play(serverList, message.guild, songs[0]);
             }
         }
     }

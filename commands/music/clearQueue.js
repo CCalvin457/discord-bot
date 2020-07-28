@@ -2,12 +2,14 @@ module.exports = {
     name: 'c',
     description: 'Removes all songs from the queue',
     execute(message, data) {
+        const serverInfo = data.serverInfo;
+        const serverList = data.serverList;
 
-        if(data.serverInfo.songs) {
-            data.serverInfo.songs.splice(0, data.serverInfo.songs.length);
+        if(serverInfo.songs) {
+            serverInfo.songs.splice(0, serverInfo.songs.length);
         }
 
-        data.serverList.set(message.guild.id, data.serverInfo);
+        serverList.set(message.guild.id, serverInfo);
 
         message.channel.send('All songs have been cleared from the queue.');
     }

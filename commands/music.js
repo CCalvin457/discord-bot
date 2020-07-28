@@ -21,8 +21,8 @@ module.exports = {
 
         const argsData = {
             args: data.args,
-            serverList: data.serverList,
-            serverInfo: data.serverInfo,
+            serverList: data.commandData.serverList,
+            serverInfo: data.commandData.serverInfo,
             voiceChannel: voiceChannel
         }
         

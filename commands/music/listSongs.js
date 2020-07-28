@@ -6,9 +6,11 @@ module.exports = {
     name: 'list',
     description: 'Adds a song (youtube url) into the song queue',
     async execute(message, data) {
-        //TODO: add pagination
-        const songList = data.serverInfo.songs;
+        const serverInfo = data.serverInfo;
+        const songList = serverInfo.songs;
+
         console.log(songList);
+
         if(songList.length == 0) {
             return message.channel.send('There are currently no songs in the queue.');
         }
