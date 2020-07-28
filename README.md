@@ -15,13 +15,13 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Queue multiple songs at once
 - [x] Pull songs from youtube playlist via url
 - [x] Favourite specific song
+- [x] Get the weather based on a city name
 
 ## I might get to these, probably not
 ### Music related
 - [ ] Set play duration (music will stop after a certain time)
 - [ ] Specify a start time for a song
 ### Others
-- [ ] Get the weather
 - [ ] Set favourite character
 - [ ] Meme generator
 - [ ] Food decision maker

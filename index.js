@@ -36,8 +36,9 @@ for(const file of commandFiles) {
 
     try {
         subCommandFiles = fs.readdirSync(`commands/${command.name}`).filter(file => file.endsWith('.js'));
+        console.log(`Found folder '${command.name}' under commands.`)
     } catch(error) {
-        console.error(`No such file or directory found named: '${command.name}' under commands.`);
+        console.error(`No folder found named: '${command.name}' under commands.`);
     }
 
     if(subCommandFiles) {
@@ -48,7 +49,6 @@ for(const file of commandFiles) {
 commandHelp.forEach((value, key) => {
     let curHelp = [];
     for(let file of value) {
-        console.log(file);
         const command = require(`./commands/${key}/${file}`);
 
         let help =  {
