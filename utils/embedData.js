@@ -1,3 +1,5 @@
+const { MessageEmbed } = require("discord.js");
+
 class EmbedData {
     _title = '';
     _description = '';
@@ -11,6 +13,7 @@ class EmbedData {
         this._fields = fields;
     }
 
+    //#region getters and setters
     get fields() {
         return this._fields;
     }
@@ -41,6 +44,18 @@ class EmbedData {
 
     set fields(fields) {
         this._fields = fields;
+    }
+    //#endregion
+
+    GenerateEmbed() {
+        const embed = new MessageEmbed()
+            .setColor(this._color)
+            .setTitle(this._title)
+            .setDescription(this._description)
+            .addFields(this._fields);
+
+        return embed;
+
     }
 }
 

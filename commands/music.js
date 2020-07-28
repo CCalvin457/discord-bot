@@ -1,5 +1,5 @@
 const { LoadMusicCommands } = require('../utils/musicUtils.js');
-const Server = require('../utils/serverInfo.js');
+const EmbedData = require('../utils/embedData.js');
 
 let musicCommands = new Map();
 
@@ -12,13 +12,11 @@ module.exports = {
         const voiceChannel = message.member.voice.channel;
         const commandName = data.args.shift();
 
-        if(!data.serverInfo) {
-            // Create new serverinfo instance if it doesn't exist for the discord server
-            let server = new Server(message);
-
-            data.serverList.set(message.guild.id, server);
-
-            data.serverInfo = server;
+        if(commandName === undefined) {
+            let title = 'Music Help';
+            let description = 'Here are the music commands I can use!';
+            let embedData = new EmbedData(title, description, undefined, data.help.get(this.name)).GenerateEmbed();
+            return message.channel.send(embedData)
         }
 
         const argsData = {

@@ -31,9 +31,15 @@ function Play(serverList, guild, song) {
     }
 
     console.log(song);
+    const options = {
+        filter: 'audioonly',
+        quality: 'highestaudio',
+        format: 'mp3',
+        highWaterMark: 24
+    }
 
     const dispatcher = serverInfo.connection
-        .play(ytdl(song.url, {filter: "audioonly"}))
+        .play(ytdl(song.url, options))
         .on('finish', () => {
             let currentSong = serverInfo.songs.shift();
 
