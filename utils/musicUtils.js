@@ -1,7 +1,7 @@
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
-const { MessageEmbed } = require('discord.js');
+const { MessageEmbed, Collection } = require('discord.js');
 const { database } = require('./firestore');
 
 async function JoinChannel(message) {
@@ -106,7 +106,7 @@ async function CreateSongInfoFromUrl(url) {
 
 function LoadMusicCommands() {
     console.log('Loading music commands...');
-    const musicCommandCollection = new Map();
+    const musicCommandCollection = new Collection();
     const musicCommands = fs.readdirSync('./commands/music').filter(file => file.endsWith('.js'));
 
     for(const file of musicCommands) {

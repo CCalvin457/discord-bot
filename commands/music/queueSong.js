@@ -2,8 +2,9 @@ const { QueueSongs, QueuePlaylist, GetFavouriteSong } = require('../../utils/mus
 const ytpl = require('ytpl');
 
 module.exports = {
-    name: 'q',
-    description: 'Adds a song (youtube url or playlist) into the song queue',
+    name: 'queue',
+    description: 'Adds a song (youtube url or playlist) into the song queue.',
+    aliases: ['q'],
     async execute(message, data) {
         const serverList = data.serverList;
         var songList;

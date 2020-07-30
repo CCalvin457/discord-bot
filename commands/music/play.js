@@ -1,9 +1,10 @@
 const { JoinChannel, Play, QueueSongs, SongListForEmbed, GetFavouriteSong } = require('../../utils/musicUtils.js');
 
 module.exports = {
-    name: 'p',
+    name: 'play',
     description: `Plays a song given a youtube url. If a song is already playing, it will queue the song instead
-If no url is given it will play the first song in the queue, provided something is there`,
+                    If no song is provided it will play the first song in the queue.`,
+    aliases: ['p'],
     async execute(message, data) {
         const bot = message.guild.me;
         const serverInfo = data.serverInfo;

@@ -1,7 +1,8 @@
 const { Repeat } = require('../../utils/repeatEnum.js');
 module.exports = {
-    name: 'r',
-    description: 'Manages song repeat',
+    name: 'repeat',
+    description: 'Allows the user to repeat \'on\' \'one\' \'off\'. By default this is set to \'off\'.',
+    aliases: ['r'],
     execute(message, data) {
         const serverInfo = data.serverInfo;
         const serverList = data.serverList;

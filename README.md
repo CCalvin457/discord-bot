@@ -19,8 +19,8 @@ Just a personal project, messing around with discord bots and discord.js
 
 ## I might get to these, probably not
 ### Music related
-- [ ] Set play duration (music will stop after a certain time)
 - [ ] Specify a start time for a song
+- [ ] Pause / Resume
 ### Others
 - [ ] Set favourite character
 - [ ] Meme generator

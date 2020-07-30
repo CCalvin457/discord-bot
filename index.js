@@ -72,6 +72,7 @@ client.on('message', async msg => {
 
     let serverInfo = serverList.get(msg.guild.id);
 
+    // Create serverInfo object if one doesn't exist for the discord server
     if(!serverInfo) {
         serverInfo = new Server(msg);
         serverList.set(msg.guild.id, serverInfo);
@@ -80,10 +81,15 @@ client.on('message', async msg => {
     const args = msg.content.slice(process.env.PREFIX.length).split(' ');
     const commandName = args.shift().toLowerCase();
 
+    if(!client.commands.has(commandName) && !client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))) 
+        return msg.reply(`'${commandName}' is not a valid command! To view a list of commands you can use the \`!help\` command.`);
+
+    const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+
     // For command specific data
     let commandData = {};
 
-    if(commandName === 'music') {
+    if(command.name === 'music') {
         commandData = {
             serverInfo: serverInfo,
             serverList: serverList
@@ -96,10 +102,6 @@ client.on('message', async msg => {
         help: commandHelp,
         commandData: commandData
     }
-
-    if(!client.commands.has(commandName)) return msg.reply(`'${commandName}' is not a valid command! To view a list of commands you can use the \`!help\` command.`);
-
-    const command = client.commands.get(commandName);
 
     try {
         command.execute(msg, data);

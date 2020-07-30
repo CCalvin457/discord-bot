@@ -5,6 +5,7 @@ const axios = require('axios').default;
 module.exports = {
     name: 'weather',
     description: `Retrieves the current weather based on the location specified. Example usage: \`!weather toronto\``,
+    aliases: ['w'],
     async execute(message, data) {
         let location = data.args[0];
 

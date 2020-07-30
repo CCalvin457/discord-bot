@@ -1,6 +1,7 @@
 module.exports = {
-    name: 'c',
-    description: 'Removes all songs from the queue',
+    name: 'clear',
+    description: 'Removes all songs from the queue. If a song is playing, it will continue to play.',
+    aliases: ['c'],
     execute(message, data) {
         const serverInfo = data.serverInfo;
         const serverList = data.serverList;

@@ -1,6 +1,7 @@
 module.exports = {
-    name: 'l',
-    description: 'Tells the bot to leave the voice channel.',
+    name: 'leave',
+    description: 'Leaves the voice channel.',
+    aliases: ['l'],
     execute(message, data) {
         const bot = message.guild.me;
         const serverInfo = data.serverInfo;

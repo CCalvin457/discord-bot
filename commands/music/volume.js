@@ -1,8 +1,9 @@
-const { ValidateVolume, SetVolume } = require('../../utils/musicUtils.js');
+const { ValidateVolume } = require('../../utils/musicUtils.js');
 
 module.exports = {
-    name: 'v',
-    description: 'Adjusts the volume of the bot',
+    name: 'volume',
+    description: 'Adjusts the playback volume.',
+    aliases: ['v', 'vol'],
     execute(message, data) {
         const serverInfo = data.serverInfo;
         const serverList = data.serverList;

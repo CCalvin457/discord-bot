@@ -1,8 +1,11 @@
 const ytdl = require('ytdl-core');
 const { database } = require('../../utils/firestore.js');
 module.exports = {
-    name: 'fav',
-    description: '¯\_(ツ)_/¯',
+    name: 'favourite',
+    description: `Allows you to favourite a song according to the following format:
+                    \`!fav <youtubeURL> <name>\`.
+                    The name you choose will be the name you use to queue/play the song.`,
+    aliases: ['fav', 'f'],
     async execute(message, data) {
         const guildID = message.guild.id;
         const song = data.args.shift();

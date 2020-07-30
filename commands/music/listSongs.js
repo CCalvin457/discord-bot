@@ -4,7 +4,8 @@ const { GenerateEmbed } = require('../../utils/generalUtil.js');
 
 module.exports = {
     name: 'list',
-    description: 'Adds a song (youtube url) into the song queue',
+    description: 'Adds a song (youtube url) into the song queue.',
+    aliases: ['li'],
     async execute(message, data) {
         const serverInfo = data.serverInfo;
         const songList = serverInfo.songs;

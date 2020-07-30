@@ -6,6 +6,7 @@ let musicCommands = new Map();
 module.exports = {
     name: 'music',
     description: 'Allows user to request a song for the bot to play. Type \`!music\` for more information.',
+    aliases: ['m'],
     async execute(message, data) {
         if(!message.guild) return;
 
@@ -30,10 +31,11 @@ module.exports = {
             musicCommands = LoadMusicCommands();
         }
 
-        if(!musicCommands.has(commandName)) return message.reply(`${commandName} is an invalid argument for the music command.`);
+        if(!musicCommands.has(commandName) && !musicCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName))) 
+            return message.reply(`${commandName} is an invalid argument for the music command.`);
 
-        const command = musicCommands.get(commandName);
-
+        const command = musicCommands.get(commandName) || musicCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+        
         try{
             command.execute(message, argsData);
         } catch(error) {
