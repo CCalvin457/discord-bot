@@ -80,8 +80,7 @@ client.on('message', async msg => {
     const args = msg.content.slice(process.env.PREFIX.length).split(' ');
     const commandName = args.shift().toLowerCase();
 
-    // we will change this object based on what data the command will need 
-    // (e.g. if its the music command we'll send serverInfo and serverList)
+    // For command specific data
     let commandData = {};
 
     if(commandName === 'music') {

@@ -1,6 +1,8 @@
 const ytdl = require('ytdl-core');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
+const { MessageEmbed } = require('discord.js');
+const { database } = require('./firestore');
 
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
@@ -185,6 +187,60 @@ function SongListForEmbed(songs) {
     return songList;
 }
 
+async function GetFavouriteSong(message, guildId, query) {
+    let song = '';
+    // find all songs that contains the query
+    const results = await database.collection('servers').doc(guildId).collection('favouriteSongs').where('name', '==', query).get();
+
+    if(!results.empty) {
+        if(results.docs.length === 1) {
+            song = results.docs[0].data().url;
+        } else {
+            // If there are multiple songs which have the same name, we let the user select which song to play or add to the queue
+            // Maybe separate some of these into their own functions?
+            let querySongs = [];
+            results.docs.forEach(result => {
+                querySongs.push(result.data());
+            });
+
+            const songList = SongListForEmbed(querySongs);
+
+            // filter for user input
+            const filter = response => {
+                return !isNaN(response.content) && (response.content > 0 && response.content <= querySongs.length);
+            }
+
+            const songListEmbed = new MessageEmbed()
+                .setColor('#0099ff')
+                .setTitle('Song List')
+                .setDescription('Which song did you want to play?')
+                .addFields(songList);
+            
+            // Allows users to input a number to select which song to play or add to the queue
+            message.channel.send(songListEmbed);
+
+            const songSelect = await message.channel.awaitMessages(filter, { max: 1, time: 15000, errors: ['time'] })
+                .then(collected => {
+                    const index = collected.first().content - 1;
+                    return querySongs[index];
+                })
+                .catch(() => {
+                    return false;
+                });
+
+            if(!songSelect) {
+                return message.channel.send('Song selection timed out.');
+            } else {
+                song = songSelect.url;
+            }
+        }
+    } else {
+        song = undefined;
+    }
+
+    return song;
+}
+
 
 module.exports = {
     JoinChannel,
@@ -194,5 +250,6 @@ module.exports = {
     CreateSongList,
     QueueSongs,
     QueuePlaylist,
-    SongListForEmbed
+    SongListForEmbed,
+    GetFavouriteSong
 }

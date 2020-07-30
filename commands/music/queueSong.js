@@ -1,4 +1,4 @@
-const { QueueSongs, QueuePlaylist } = require('../../utils/musicUtils.js');
+const { QueueSongs, QueuePlaylist, GetFavouriteSong } = require('../../utils/musicUtils.js');
 const ytpl = require('ytpl');
 
 module.exports = {
@@ -27,6 +27,24 @@ module.exports = {
                 return message.reply(`${playlistUrl} is not a valid youtube playlist url or id`);
             }
             
+        } else if(data.args[0] === '-f') {
+            let queryArr = data.args.splice(1, data.args.length - 1);
+             // setup user query
+             let query = '';
+                
+             queryArr.forEach(arg => {
+                 query += arg + ' ';
+             });
+     
+             query = query.trim();
+
+             song = await GetFavouriteSong(message, message.guild.id, query);
+
+            if(song === undefined) {
+                return message.channel.send(`${query} could not be found`);                
+            } 
+
+            await QueueSongs(serverList, message, [song]);
         } else {
             // Queues song(s) via youtube url
             songList = data.args;
