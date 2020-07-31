@@ -18,6 +18,7 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Play/Queue song from favourites list
 - [x] Get the weather based on a city name
 - [x] Help command
+- [x] Decision maker (picks one item from a given list of items)
 
 ## I might get to these, probably not
 ### Music related
@@ -26,5 +27,4 @@ Just a personal project, messing around with discord bots and discord.js
 ### Others
 - [ ] Set favourite character
 - [ ] Meme generator
-- [ ] Food decision maker
 - [ ] Food generator?
