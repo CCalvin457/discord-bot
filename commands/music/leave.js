@@ -1,6 +1,7 @@
 module.exports = {
     name: 'leave',
-    description: 'Leaves the voice channel.',
+    description: `Leaves the voice channel.
+                    *aliases*: \`leave\`, \`l\``,
     aliases: ['l'],
     execute(message, data) {
         const bot = message.guild.me;

@@ -4,7 +4,8 @@ const axios = require('axios').default;
 
 module.exports = {
     name: 'weather',
-    description: `Retrieves the current weather based on the location specified. Example usage: \`!weather toronto\``,
+    description: `Retrieves the current weather based on the location specified. Example usage: \`!weather toronto\`
+                    *aliases*: \`weather\`, \`w\``,
     aliases: ['w'],
     async execute(message, data) {
         let location = data.args[0];
@@ -16,6 +17,7 @@ module.exports = {
         let url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${process.env.WEATHER_API}`;
         let response = await axios.get(url).catch(err => {
             console.log(err);
+            return message.reply(`${location} could not be found.`);
         });
 
         let tempData = response.data;

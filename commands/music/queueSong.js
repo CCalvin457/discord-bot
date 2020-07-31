@@ -3,7 +3,10 @@ const ytpl = require('ytpl');
 
 module.exports = {
     name: 'queue',
-    description: 'Adds a song (youtube url or playlist) into the song queue.',
+    description: `Adds a song (youtube url or playlist) into the song queue.
+                    To add a playlist use the \`-pl\` argument followed by the youtube playlist url.
+                    To add a song from this server's favourites list use the \`-f\` argument followed by a search term.
+                    *aliases*: \`queue\`, \`q\``,
     aliases: ['q'],
     async execute(message, data) {
         const serverList = data.serverList;

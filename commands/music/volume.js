@@ -2,7 +2,8 @@ const { ValidateVolume } = require('../../utils/musicUtils.js');
 
 module.exports = {
     name: 'volume',
-    description: 'Adjusts the playback volume.',
+    description: `Adjusts the playback volume.
+                    *aliases*: \`volume\`, \`vol\`, \`v\``,
     aliases: ['v', 'vol'],
     execute(message, data) {
         const serverInfo = data.serverInfo;

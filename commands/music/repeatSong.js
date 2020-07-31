@@ -1,7 +1,8 @@
 const { Repeat } = require('../../utils/repeatEnum.js');
 module.exports = {
     name: 'repeat',
-    description: 'Allows the user to repeat \'on\' \'one\' \'off\'. By default this is set to \'off\'.',
+    description: `Allows the user to repeat \`on\`, \`one\`, or \`off\`. By default this is set to \`off\`.
+                    *aliases*: \`repeat\`, \`r\``,
     aliases: ['r'],
     execute(message, data) {
         const serverInfo = data.serverInfo;

@@ -2,8 +2,10 @@ const { JoinChannel, Play, QueueSongs, SongListForEmbed, GetFavouriteSong } = re
 
 module.exports = {
     name: 'play',
-    description: `Plays a song given a youtube url. If a song is already playing, it will queue the song instead
-                    If no song is provided it will play the first song in the queue.`,
+    description: `Plays a song given a youtube url. If a song is already playing, it will queue the song instead.
+                    If no song is provided it will play the first song in the queue.
+                    You can use the \`-f\` argument followed by a search term to search for a song from this server's favourites list.
+                    *aliases*: \`play\`, \`p\``,
     aliases: ['p'],
     async execute(message, data) {
         const bot = message.guild.me;

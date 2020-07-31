@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 module.exports = {
     name: 'np',
-    description: 'Displays the currently playing song.',
+    description: `Displays the currently playing song.`,
     execute(message, data) {
         const serverInfo = data.serverInfo;
 

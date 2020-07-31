@@ -15,7 +15,9 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Queue multiple songs at once
 - [x] Pull songs from youtube playlist via url
 - [x] Favourite specific song
+- [x] Play/Queue song from favourites list
 - [x] Get the weather based on a city name
+- [x] Help command
 
 ## I might get to these, probably not
 ### Music related
@@ -26,4 +28,3 @@ Just a personal project, messing around with discord bots and discord.js
 - [ ] Meme generator
 - [ ] Food decision maker
 - [ ] Food generator?
-- [ ] Add help command

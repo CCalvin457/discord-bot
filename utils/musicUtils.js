@@ -74,16 +74,16 @@ function ValidateVolume(value) {
         message: ''
     }
 
-    console.log(`Setting volume to: ${value}`);
+    console.log(`Attempting to set volume to: ${value}`);
 
     if(Number.isNaN(volume)) {
         returnValue.message = 'You must enter a valid number to set the volume';
-    }else if(volume < 0 || volume > 1) {
-        returnValue.message = 'Please enter a value between 0 and 1';
+    }else if(volume < 0 || volume > 100) {
+        returnValue.message = 'Please enter a value between 0 and 100';
     } else {
         returnValue.success = true;
-        returnValue.value = volume;
-        returnValue.message = '';
+        returnValue.value = volume / 100;
+        returnValue.message = undefined;
     }
 
     return returnValue;

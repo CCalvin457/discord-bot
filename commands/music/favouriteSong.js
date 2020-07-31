@@ -3,8 +3,9 @@ const { database } = require('../../utils/firestore.js');
 module.exports = {
     name: 'favourite',
     description: `Allows you to favourite a song according to the following format:
-                    \`!fav <youtubeURL> <name>\`.
-                    The name you choose will be the name you use to queue/play the song.`,
+                    \`!music fav <youtubeURL> <name>\`.
+                    The name you choose will be the name you use to queue/play the song.
+                    *aliases*:  \`favourite\`, \`fav\`, \`f\``,
     aliases: ['fav', 'f'],
     async execute(message, data) {
         const guildID = message.guild.id;

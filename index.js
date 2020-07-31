@@ -36,9 +36,9 @@ for(const file of commandFiles) {
 
     try {
         subCommandFiles = fs.readdirSync(`commands/${command.name}`).filter(file => file.endsWith('.js'));
-        console.log(`Found folder '${command.name}' under commands.`)
+        console.info(`Found folder '${command.name}' under commands.`)
     } catch(error) {
-        console.error(`No folder found named: '${command.name}' under commands.`);
+        console.info(`No folder found named: '${command.name}' under commands.`);
     }
 
     if(subCommandFiles) {

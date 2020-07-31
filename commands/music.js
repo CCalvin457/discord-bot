@@ -5,7 +5,8 @@ let musicCommands = new Map();
 
 module.exports = {
     name: 'music',
-    description: 'Allows user to request a song for the bot to play. Type \`!music\` for more information.',
+    description: `Allows user to request a song for the bot to play. Type \`!music\` for more information.
+                    *aliases*: \`music\`, \`m\``,
     aliases: ['m'],
     async execute(message, data) {
         if(!message.guild) return;
