@@ -23,25 +23,51 @@ async function JoinChannel(message) {
     return connection;
 }
 
+// Attempts to leave the voice channel.
+// Returns false if bot was never in a voice channel
+// Returns true if bot has left the voice channel
+function LeaveChannel(server, guildId, bot) {
+    if(bot.voice.channel === null) {
+        return false;
+    }
+
+    server.serverInfo.ClearServerConnectionInfo(server.serverList, guildId);
+
+    bot.voice.channel.leave();
+        
+    return true;
+}
+
 function Play(serverList, guild, song) {
     console.log('hello');
     const serverInfo = serverList.get(guild.id);
 
     if(!song) {
         serverInfo.UpdatePlaying(guild.id, serverList);
-        return;
+        message.channel.send(`There are no more songs in the queue, leaving voice channel.`);
+
+        const server = {
+            serverInfo: serverInfo,
+            serverList: serverList
+        }
+
+        let response = LeaveChannel(server, guild.id, guild.me);
+
+        if(!response) {
+            return serverInfo.textChannel.send('I\'m not currently in a voice channel!');
+        }
+        return serverInfo.textChannel.send('Successfully left the voice channel!');
     }
 
     console.log(song);
     const options = {
         filter: 'audioonly',
         quality: 'highestaudio',
-        format: 'mp3',
-        highWaterMark: 24
+        highWaterMark: 1<<25
     }
 
     const dispatcher = serverInfo.connection
-        .play(ytdl(song.url, options))
+        .play(ytdl(song.url, options), {highWaterMark: 1})
         .on('finish', () => {
             let currentSong = serverInfo.songs.shift();
 
@@ -244,6 +270,7 @@ async function GetFavouriteSong(message, guildId, query) {
 
 module.exports = {
     JoinChannel,
+    LeaveChannel,
     Play,
     ValidateVolume,
     LoadMusicCommands,
