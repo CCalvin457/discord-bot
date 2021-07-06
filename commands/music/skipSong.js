@@ -2,7 +2,7 @@ const { Play } = require('../../utils/musicUtils.js');
 
 module.exports = { 
     name: 'skip',
-    description: `Allows the user to skip a number of songs by specifiying a number after the command. 
+    description: `Allows the user to skip a number of songs by specifying a number after the command. 
                     If no number is provided then the first song in the queue will be skipped.
                     Note: Skipped songs are removed from the queue.
                     *aliases*: \`skip\`, \`s\``,
