@@ -10,7 +10,7 @@ module.exports = {
         const serverList = data.serverList;
         const value = data.args[0];
         if(value == null) {
-            return message.reply('Please include a value between 0 and 1');
+            return message.reply('Please include a value between 0 and 100');
         }
 
         const volumeInfo = ValidateVolume(value);

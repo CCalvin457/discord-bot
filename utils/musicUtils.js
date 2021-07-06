@@ -1,4 +1,5 @@
 const ytdl = require('ytdl-core');
+const ytdlDiscord = require('ytdl-core-discord');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
 const { MessageEmbed, Collection } = require('discord.js');
@@ -38,13 +39,12 @@ function LeaveChannel(server, guildId, bot) {
     return true;
 }
 
-function Play(serverList, guild, song) {
+async function Play(serverList, guild, song) {
     console.log('hello');
     const serverInfo = serverList.get(guild.id);
-
     if(!song) {
         serverInfo.UpdatePlaying(guild.id, serverList);
-        message.channel.send(`There are no more songs in the queue, leaving voice channel.`);
+        serverInfo.textChannel.send(`There are no more songs in the queue, leaving voice channel.`);
 
         const server = {
             serverInfo: serverInfo,
@@ -67,7 +67,7 @@ function Play(serverList, guild, song) {
     }
 
     const dispatcher = serverInfo.connection
-        .play(ytdl(song.url, options), {highWaterMark: 1})
+        .play(await ytdlDiscord(song.url), {type: 'opus'})
         .on('finish', () => {
             let currentSong = serverInfo.songs.shift();
 
@@ -117,8 +117,9 @@ function ValidateVolume(value) {
 
 async function CreateSongInfoFromUrl(url) {
     var songInfo, song = {};
+
     try {
-        songInfo = await ytdl.getInfo(url);
+        songInfo = await ytdlDiscord.getBasicInfo(url);
         song = {
             title: songInfo.videoDetails.title,
             url: songInfo.videoDetails.video_url
@@ -126,6 +127,7 @@ async function CreateSongInfoFromUrl(url) {
     } catch(error) {
         throw `${url} is not a valid youtube url.`;
     }
+    
     console.log('returning song...');
     return song;
 }

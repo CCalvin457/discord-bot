@@ -1,3 +1,4 @@
+const { LeaveChannel } = require('../../utils/musicUtils');
 module.exports = {
     name: 'leave',
     description: `Leaves the voice channel.
