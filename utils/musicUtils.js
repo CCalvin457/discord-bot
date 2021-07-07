@@ -46,6 +46,9 @@ async function Play(serverList, guild, song) {
         serverInfo.UpdatePlaying(guild.id, serverList);
         serverInfo.textChannel.send(`There are no more songs in the queue, leaving voice channel.`);
 
+        // reset set currentSongIndex back to 0
+        serverInfo.currentSongIndex = 0;
+
         const server = {
             serverInfo: serverInfo,
             serverList: serverList
@@ -59,27 +62,23 @@ async function Play(serverList, guild, song) {
         return serverInfo.textChannel.send('Successfully left the voice channel!');
     }
 
-    console.log(song);
-    const options = {
-        filter: 'audioonly',
-        quality: 'highestaudio',
-        highWaterMark: 1<<25
-    }
-
     const dispatcher = serverInfo.connection
         .play(await ytdlDiscord(song.url), {type: 'opus'})
         .on('finish', () => {
-            let currentSong = serverInfo.songs.shift();
+            let songIndex = (serverInfo.currentSongIndex + 1) < serverInfo.songs.length ? serverInfo.currentSongIndex + 1 : 0;
 
-            if(serverInfo.repeat == Repeat.On) {
-                serverInfo.songs.push(currentSong);
-            }
-            
-            if(serverInfo.repeat == Repeat.One) {
-                serverInfo.songs.unshift(currentSong);
+            if(serverInfo.repeat === Repeat.One) {
+                // if repeat is set to one, just set the songIndex to currentSongIndex
+                songIndex = serverInfo.currentSongIndex;
             }
 
-            Play(serverList, guild, serverInfo.songs[0]);
+            if(serverInfo.repeat === Repeat.Off && songIndex < serverInfo.currentSongIndex) {
+                // If there repeat is off and we have gone through all songs, set song index to -1 to stop playing music
+                songIndex = -1;
+            }
+
+            serverInfo.currentSongIndex = songIndex;
+            Play(serverList, guild, serverInfo.songs[songIndex]);
         })
         .on('error', error => {
             serverInfo.UpdatePlaying(guild.id, serverList);

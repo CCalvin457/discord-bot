@@ -4,6 +4,7 @@ class Server {
     _playing = false;
     _nowPlaying = {};
     _repeat = 'off';
+    _currentSongIndex = 0;
 
     constructor(message, voiceChannel = null, connection = null) {
         this._textChannel = message.channel;
@@ -12,6 +13,14 @@ class Server {
     }
 
     //#region Getters and Setters
+    get currentSongIndex() {
+        return this._currentSongIndex;
+    }
+
+    set currentSongIndex(value) {
+        this._currentSongIndex = value;
+    }
+
     get textChannel() {
         return this._textChannel;
     }

@@ -1,4 +1,5 @@
 const { Play } = require('../../utils/musicUtils.js');
+const { Repeat } = require('../../utils/repeatEnum');
 
 module.exports = { 
     name: 'skip',
@@ -16,28 +17,36 @@ module.exports = {
         }
 
         const currentSongs = serverInfo.songs;
+        let songIndex = serverInfo.currentSongIndex;
         let value = data.args[0];
 
         if(value != null) {
             if(!isNaN(value)) {
                 value = parseInt(value);
-                currentSongs.splice(0, value || currentSongs.length);
-                message.channel.send(`Skipped ${value} song(s)!`);
+                let maxSongsLength = currentSongs.length - songIndex;
+                // if the number of songs the user wants to skip exceeds the number of songs remaining in the queue, set songIndex to 0 instead
+                songIndex = value < maxSongsLength ? (songIndex + value) : 0;
+                message.channel.send(`Skipped ${value < maxSongsLength ? value : maxSongsLength} song(s)!`);
             } else {
                 return message.reply('Please enter a valid number.');
             }
         } else {
-            let skippedSong = currentSongs.shift();
+            let skippedSong = currentSongs[songIndex];
+            songIndex = (songIndex + 1) < currentSongs.length ? (songIndex + 1) : 0;
             message.channel.send(`${skippedSong.title} has been skipped!`);
         }
+        
+        serverInfo.currentSongIndex = songIndex;
 
         if(serverInfo.playing) {
-            if(currentSongs.length > 0){
-                Play(serverList, message.guild, currentSongs[0]);
-            } else {
-                serverInfo.UpdatePlaying(message.guild.id, serverList);
-                serverInfo.connection.dispatcher.end();
+            // if there was a song playing while skipping, check to see if repeat is on and if the songIndex is 0
+            // if we skip over the last song in the list with repeat off it should stop playing music
+            if(serverInfo.repeat === Repeat.Off && songIndex === 0) {
+                songIndex = -1;
             }
+
+            serverInfo.currentSongIndex = songIndex;
+            Play(serverList, message.guild, currentSongs[songIndex]);
         }
 
         serverList.set(message.guild.id, serverInfo);

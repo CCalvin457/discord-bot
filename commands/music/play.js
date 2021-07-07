@@ -42,14 +42,14 @@ module.exports = {
         if(bot.voice.channel == null || bot.voice.channel != data.voiceChannel) {
             JoinChannel(message).then(connection => {
                 serverInfo.UpdateServerConnectionInfo(serverList, message, data.voiceChannel, connection);
-                Play(serverList, message.guild, songs[0]);
+                Play(serverList, message.guild, songs[serverInfo.currentSongIndex]);
             }).catch(error => {
                 return message.reply(error);
             });
         } else {
             console.log('already in correct channel');
             if(!serverInfo.playing) {
-                Play(serverList, message.guild, songs[0]);
+                Play(serverList, message.guild, songs[serverInfo.currentSongIndex]);
             }
         }
     }
