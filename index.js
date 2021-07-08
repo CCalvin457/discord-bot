@@ -70,6 +70,7 @@ client.once('ready', () => {
 client.on('message', async msg => {
     if(!msg.content.startsWith(process.env.PREFIX) || msg.author.bot) return;
 
+    // Try to find existing server information from the server list
     let serverInfo = serverList.get(msg.guild.id);
 
     // Create serverInfo object if one doesn't exist for the discord server
