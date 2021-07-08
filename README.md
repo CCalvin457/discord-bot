@@ -1,7 +1,9 @@
 # Discord-bot
+
 Just a personal project, messing around with discord bots and discord.js
 
 ## Currently Working
+
 - [x] Join/leave voice channel
 - [x] Play song via youtube link
 - [x] Adjust volume
@@ -21,10 +23,12 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Decision maker (picks one item from a given list of items)
 
 ## I might get to these, probably not
+
 ### Music related
+
 - [ ] Specify a start time for a song
 - [ ] Pause / Resume
+
 ### Others
-- [ ] Set favourite character
+
 - [ ] Meme generator
-- [ ] Food generator?
