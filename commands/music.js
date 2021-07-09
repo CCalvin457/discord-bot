@@ -1,5 +1,5 @@
 const { LoadMusicCommands } = require('../utils/musicUtils.js');
-const EmbedData = require('../utils/embedData.js');
+const EmbedData = require('../Classes/embedData.js');
 
 let musicCommands = new Map();
 

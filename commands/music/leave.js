@@ -7,14 +7,14 @@ module.exports = {
     execute(message, data) {
         const bot = message.guild.me;
         const serverInfo = data.serverInfo;
-        const serverList = data.serverList;
+        // const serverList = data.serverList;
 
-        const server = {
-            serverInfo: serverInfo,
-            serverList: serverList
-        }
+        // const server = {
+        //     serverInfo: serverInfo,
+        //     serverList: serverList
+        // }
 
-        let response = LeaveChannel(server, message.guild.id, bot);
+        let response = LeaveChannel(serverInfo, bot);
 
         if(!response) {
             return message.reply('I\'m not currently in a voice channel!');   

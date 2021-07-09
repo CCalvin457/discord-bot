@@ -1,4 +1,3 @@
-const ytdl = require('ytdl-core');
 const ytdlDiscord = require('ytdl-core-discord');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
@@ -13,7 +12,7 @@ async function JoinChannel(message) {
         connection = await voiceChannel.join();
     } catch(error) {
         if(!voiceChannel) {
-            throw 'You need to be in a voice channel first!';
+            throw 'you are currently not in a voice channel! Please join a voice channel first.';
         }
         const permissions = voiceChannel.permissionsFor(message.client.user);
         if(!permissions.has('CONNECT') || !permissions.has('SPEAK')) {
@@ -27,12 +26,12 @@ async function JoinChannel(message) {
 // Attempts to leave the voice channel.
 // Returns false if bot was never in a voice channel
 // Returns true if bot has left the voice channel
-function LeaveChannel(server, guildId, bot) {
+function LeaveChannel(server, bot) {
     if(bot.voice.channel === null) {
         return false;
     }
 
-    server.serverInfo.ClearServerConnectionInfo(server.serverList, guildId);
+    server.ClearServerConnectionInfo();
 
     bot.voice.channel.leave();
         
@@ -50,12 +49,12 @@ async function Play(serverList, guild, song) {
         // reset set currentSongIndex back to 0
         musicPlayer.currentSongIndex = 0;
 
-        const server = {
-            serverInfo: serverInfo,
-            serverList: serverList
-        }
+        // const server = {
+        //     serverInfo: serverInfo,
+        //     serverList: serverList
+        // }
 
-        let response = LeaveChannel(server, guild.id, guild.me);
+        let response = LeaveChannel(serverInfo, guild.me);
 
         if(!response) {
             return serverInfo.textChannel.send('I\'m not currently in a voice channel!');

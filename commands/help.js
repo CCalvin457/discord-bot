@@ -1,4 +1,4 @@
-const EmbedData = require("../utils/embedData");
+const EmbedData = require("../Classes/embedData");
 const { MessageEmbed } = require("discord.js");
 
 module.exports = {

@@ -1,5 +1,5 @@
 const moment = require('moment');
-const EmbedData = require('../utils/embedData');
+const EmbedData = require('../Classes/embedData');
 const axios = require('axios').default;
 
 module.exports = {

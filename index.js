@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const dotenv = require('dotenv');
 const fs = require('fs');
-const Server = require('./utils/serverInfo.js');
+const Server = require('./Classes/serverInfo.js');
 
 const client = new Discord.Client();
 dotenv.config();
@@ -106,6 +106,7 @@ client.on('message', async msg => {
 
     try {
         command.execute(msg, data);
+        // console.log(serverList.get(msg.guild.id));
     } catch(error) {
         console.error(error);
     }

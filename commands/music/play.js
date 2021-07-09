@@ -42,7 +42,7 @@ module.exports = {
 
         if(bot.voice.channel == null || bot.voice.channel != data.voiceChannel) {
             JoinChannel(message).then(connection => {
-                serverInfo.UpdateServerConnectionInfo(serverList, message, data.voiceChannel, connection);
+                serverInfo.UpdateServerConnectionInfo(message, connection);
                 Play(serverList, message.guild, songs[serverInfo.musicPlayer.currentSongIndex]);
             }).catch(error => {
                 return message.reply(error);

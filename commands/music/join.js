@@ -7,10 +7,11 @@ module.exports = {
     aliases: ['j'],
     execute(message, data) {
         const serverInfo = data.serverInfo;
-        const serverList = data.serverList;
 
         JoinChannel(message).then(connection => {
-            serverInfo.UpdateServerConnectionInfo(serverList, message, serverInfo.voiceChannel, connection);
+            serverInfo.UpdateServerConnectionInfo(message, connection);
+        }).catch(err => {
+            message.reply(err);
         });
     }
 }
