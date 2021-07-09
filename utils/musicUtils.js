@@ -1,9 +1,14 @@
 const ytdlDiscord = require('ytdl-core-discord');
 const fs = require('fs');
 const { Repeat } = require('./repeatEnum.js');
-const { MessageEmbed, Collection } = require('discord.js');
+const { MessageEmbed, Collection, Guild } = require('discord.js');
 const { database } = require('./firestore');
 
+/**
+ * Attempts to join the channel the user is in
+ * @param {Message} message 
+ * @returns {VoiceConnection} The voice connection the bot has connected to
+ */
 async function JoinChannel(message) {
     const voiceChannel = message.member.voice.channel;
     var connection;
@@ -23,9 +28,12 @@ async function JoinChannel(message) {
     return connection;
 }
 
-// Attempts to leave the voice channel.
-// Returns false if bot was never in a voice channel
-// Returns true if bot has left the voice channel
+/**
+ * Attempts to leave the voice channel
+ * @param {Server} server The server information
+ * @param {GuildMember} bot Reference to the discord bot itself
+ * @returns {boolean} False if the bot was not in a channel. True if the bot leaves the channel successfully. 
+ */
 function LeaveChannel(server, bot) {
     if(bot.voice.channel === null) {
         return false;
@@ -38,6 +46,13 @@ function LeaveChannel(server, bot) {
     return true;
 }
 
+/**
+ * Discord bot plays the music
+ * @param {Server} server The server information
+ * @param {Guild} guild Reference to the bot for when it finishes playing all songs
+ * @param {object} song An object containing the youtube url and song title
+ * @returns Sends a message to the user after the bot leaves the channel
+ */
 async function Play(server, guild, song) {
     console.log('hello');
     const musicPlayer = server.musicPlayer;
@@ -70,7 +85,7 @@ async function Play(server, guild, song) {
 
             if(musicPlayer.repeat === Repeat.On && songIndex < musicPlayer.currentSongIndex) {
                 // If repeat is on and songIndex is smaller than current song index
-                songindex = 0;
+                songIndex = 0;
             }
 
             musicPlayer.currentSongIndex = songIndex;
@@ -86,6 +101,11 @@ async function Play(server, guild, song) {
     musicPlayer.UpdatePlaying(song);
 }
 
+/**
+ * Validates whether or not the provided value is a number between 0 and 100
+ * @param {number} value The value to check
+ * @returns {object} An object that provides if it check was successful, the value, and a potential error message
+ */
 function ValidateVolume(value) {
     const volume = Number(value);
 
@@ -110,6 +130,11 @@ function ValidateVolume(value) {
     return returnValue;
 }
 
+/**
+ * Creates song information from given URL (song title and URL).
+ * @param {string} url 
+ * @returns {object} Song details - Song title and URL
+ */
 async function CreateSongInfoFromUrl(url) {
     var songInfo, song = {};
 
@@ -127,6 +152,10 @@ async function CreateSongInfoFromUrl(url) {
     return song;
 }
 
+/**
+ * Searches through all files in the music folder and creates an object used for the help command.
+ * @returns {object} Music command details for the help command
+ */
 function LoadMusicCommands() {
     console.log('Loading music commands...');
     const musicCommandCollection = new Collection();
@@ -139,6 +168,7 @@ function LoadMusicCommands() {
     }
     return musicCommandCollection;
 }
+
 
 async function CreateSongList(message, songs) {
     let finalSongList = [];
@@ -168,7 +198,6 @@ async function CreateSongList(message, songs) {
 }
 
 async function QueueSongs(server, message, songs) {
-    // const serverInfo = serverList.get(message.guild.id);
     const musicPlayer = server.musicPlayer;
     const songList = await CreateSongList(message, songs);
 
@@ -176,12 +205,9 @@ async function QueueSongs(server, message, songs) {
         musicPlayer.songs.push(song);
         message.channel.send(`${song.title} has been added to the queue!`);
     });
-
-    // serverList.set(message.guild.id, serverInfo);
 }
 
 function QueuePlaylist(server, message, songs) {
-    // const serverInfo = serverList.get(message.guild.id);
     const musicPlayer = server.musicPlayer;
 
     let songInfo = songs.map(song => {
@@ -193,8 +219,6 @@ function QueuePlaylist(server, message, songs) {
     });
 
     message.channel.send(`${songInfo.length} songs have been added to the queue!`);
-
-    // serverList.set(message.guild.id, serverInfo);
 }
 
 function SongListForEmbed(songs) {

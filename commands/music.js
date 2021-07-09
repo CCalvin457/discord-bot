@@ -23,7 +23,6 @@ module.exports = {
 
         const argsData = {
             args: data.args,
-            // serverList: data.commandData.serverList,
             serverInfo: data.serverInfo,
             voiceChannel: voiceChannel
         }
