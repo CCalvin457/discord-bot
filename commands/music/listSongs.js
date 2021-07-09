@@ -9,7 +9,7 @@ module.exports = {
     aliases: ['li'],
     async execute(message, data) {
         const serverInfo = data.serverInfo;
-        const songList = serverInfo.songs;
+        const songList = serverInfo.musicPlayer.songs;
 
         console.log(songList);
 

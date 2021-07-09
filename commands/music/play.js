@@ -11,7 +11,8 @@ module.exports = {
         const bot = message.guild.me;
         const serverInfo = data.serverInfo;
         const serverList = data.serverList;
-        let songs = serverInfo.songs;
+        let songs = serverInfo.musicPlayer.songs;
+        
         if(data.args[0] == null && songs.length == 0) {
             return message.reply('Please specify the song you wish to play by entering a youtube url');
         }
@@ -42,14 +43,14 @@ module.exports = {
         if(bot.voice.channel == null || bot.voice.channel != data.voiceChannel) {
             JoinChannel(message).then(connection => {
                 serverInfo.UpdateServerConnectionInfo(serverList, message, data.voiceChannel, connection);
-                Play(serverList, message.guild, songs[serverInfo.currentSongIndex]);
+                Play(serverList, message.guild, songs[serverInfo.musicPlayer.currentSongIndex]);
             }).catch(error => {
                 return message.reply(error);
             });
         } else {
             console.log('already in correct channel');
             if(!serverInfo.playing) {
-                Play(serverList, message.guild, songs[serverInfo.currentSongIndex]);
+                Play(serverList, message.guild, songs[serverInfo.musicPlayer.currentSongIndex]);
             }
         }
     }

@@ -3,13 +3,13 @@ module.exports = {
     name: 'np',
     description: `Displays the currently playing song.`,
     execute(message, data) {
-        const serverInfo = data.serverInfo;
+        const musicPlayer = data.serverInfo.musicPlayer;
 
-        if(!serverInfo.playing) {
+        if(!musicPlayer.playing) {
             return message.reply('no song currently playing');
         }
         
-        const currentSong = serverInfo.nowPlaying;
+        const currentSong = musicPlayer.nowPlaying;
 
         const curSongEmbed = new Discord.MessageEmbed()
             .setColor('#a6f87e')

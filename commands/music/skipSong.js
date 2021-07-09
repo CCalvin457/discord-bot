@@ -9,15 +9,16 @@ module.exports = {
                     *aliases*: \`skip\`, \`s\``,
     aliases: ['s'],
     execute(message, data) {
-        const serverInfo = data.serverInfo;
+        // const serverInfo = data.serverInfo;
         const serverList = data.serverList;
+        const musicPlayer = data.serverInfo.musicPlayer;
 
-        if(serverInfo.songs.length == 0) {
+        if(musicPlayer.songs.length == 0) {
             return message.reply('There are no songs in the queue.');
         }
 
-        const currentSongs = serverInfo.songs;
-        let songIndex = serverInfo.currentSongIndex;
+        const currentSongs = musicPlayer.songs;
+        let songIndex = musicPlayer.currentSongIndex;
         let value = data.args[0];
 
         if(value != null) {
@@ -36,19 +37,19 @@ module.exports = {
             message.channel.send(`${skippedSong.title} has been skipped!`);
         }
         
-        serverInfo.currentSongIndex = songIndex;
+        musicPlayer.currentSongIndex = songIndex;
 
-        if(serverInfo.playing) {
+        if(musicPlayer.playing) {
             // if there was a song playing while skipping, check to see if repeat is on and if the songIndex is 0
             // if we skip over the last song in the list with repeat off it should stop playing music
-            if(serverInfo.repeat === Repeat.Off && songIndex === 0) {
+            if(musicPlayer.repeat === Repeat.Off && songIndex === 0) {
                 songIndex = -1;
             }
 
-            serverInfo.currentSongIndex = songIndex;
+            musicPlayer.currentSongIndex = songIndex;
             Play(serverList, message.guild, currentSongs[songIndex]);
         }
-
-        serverList.set(message.guild.id, serverInfo);
+        
+        // serverList.set(message.guild.id, serverInfo);
     }
 }

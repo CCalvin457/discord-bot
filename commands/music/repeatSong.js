@@ -6,7 +6,7 @@ module.exports = {
     aliases: ['r'],
     execute(message, data) {
         const serverInfo = data.serverInfo;
-        const serverList = data.serverList;
+        // const serverList = data.serverList;
 
         let argument = data.args[0] == null ? null : data.args[0].toLowerCase();
         
@@ -15,8 +15,8 @@ module.exports = {
             return message.reply(`Please specify argument for repeat [on|one|off]`);
         }
 
-        serverInfo.repeat = argument;
-        serverList.set(message.guild.id, serverInfo);
+        serverInfo.musicPlayer.repeat = argument;
+        // serverList.set(message.guild.id, serverInfo);
 
         if(argument === Repeat.On) {
             message.channel.send(`Repeating whole playlist.`);

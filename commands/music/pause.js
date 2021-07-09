@@ -5,18 +5,19 @@ module.exports = {
     aliases: ['pa'],
     execute(message, data) {
         const serverInfo = data.serverInfo;
-        const serverList = data.serverList;
+        // const serverList = data.serverList;
+        const musicPlayer = serverInfo.musicPlayer;
 
-        if(serverInfo.playing){
+        if(musicPlayer.playing){
             serverInfo.connection.dispatcher.pause();
-            serverInfo.playing = false;
+            musicPlayer.playing = false;
             message.channel.send('Paused');
         } else {
             serverInfo.connection.dispatcher.resume();
-            serverInfo.playing = true;
+            musicPlayer.playing = true;
             message.channel.send('Resumed');
         }
 
-        serverList.set(message.guild.id, serverInfo);
+        // serverList.set(message.guild.id, serverInfo);
     }
 }
