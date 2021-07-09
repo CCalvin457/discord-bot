@@ -7,12 +7,6 @@ module.exports = {
     execute(message, data) {
         const bot = message.guild.me;
         const serverInfo = data.serverInfo;
-        // const serverList = data.serverList;
-
-        // const server = {
-        //     serverInfo: serverInfo,
-        //     serverList: serverList
-        // }
 
         let response = LeaveChannel(serverInfo, bot);
 

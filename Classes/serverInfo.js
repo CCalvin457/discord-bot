@@ -29,8 +29,8 @@ class Server {
 
     ClearServerConnectionInfo() {
         this._connection = null;
-        this._playing = false;
-        this._nowPlaying = {};
+        this._musicPlayer.playing = false;
+        this._musicPlayer.nowPlaying = {};
     }
 }
 

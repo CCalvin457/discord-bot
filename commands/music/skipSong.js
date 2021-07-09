@@ -9,8 +9,7 @@ module.exports = {
                     *aliases*: \`skip\`, \`s\``,
     aliases: ['s'],
     execute(message, data) {
-        // const serverInfo = data.serverInfo;
-        const serverList = data.serverList;
+        const serverInfo = data.serverInfo;
         const musicPlayer = data.serverInfo.musicPlayer;
 
         if(musicPlayer.songs.length == 0) {
@@ -47,9 +46,7 @@ module.exports = {
             }
 
             musicPlayer.currentSongIndex = songIndex;
-            Play(serverList, message.guild, currentSongs[songIndex]);
+            Play(serverInfo, message.guild, currentSongs[songIndex]);
         }
-        
-        // serverList.set(message.guild.id, serverInfo);
     }
 }

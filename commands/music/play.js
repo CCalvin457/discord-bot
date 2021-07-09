@@ -10,8 +10,8 @@ module.exports = {
     async execute(message, data) {
         const bot = message.guild.me;
         const serverInfo = data.serverInfo;
-        const serverList = data.serverList;
-        let songs = serverInfo.musicPlayer.songs;
+        const musicPlayer = serverInfo.musicPlayer;
+        let songs = musicPlayer.songs;
         
         if(data.args[0] == null && songs.length == 0) {
             return message.reply('Please specify the song you wish to play by entering a youtube url');
@@ -37,20 +37,20 @@ module.exports = {
 
                 song = result;
             }
-            await QueueSongs(serverList, message, [song]);
+            await QueueSongs(serverInfo, message, [song]);
         }
 
         if(bot.voice.channel == null || bot.voice.channel != data.voiceChannel) {
             JoinChannel(message).then(connection => {
                 serverInfo.UpdateServerConnectionInfo(message, connection);
-                Play(serverList, message.guild, songs[serverInfo.musicPlayer.currentSongIndex]);
+                Play(serverInfo, message.guild, songs[musicPlayer.currentSongIndex]);
             }).catch(error => {
                 return message.reply(error);
             });
         } else {
             console.log('already in correct channel');
             if(!serverInfo.playing) {
-                Play(serverList, message.guild, songs[serverInfo.musicPlayer.currentSongIndex]);
+                Play(serverInfo, message.guild, songs[musicPlayer.currentSongIndex]);
             }
         }
     }

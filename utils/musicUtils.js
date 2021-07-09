@@ -38,13 +38,13 @@ function LeaveChannel(server, bot) {
     return true;
 }
 
-async function Play(serverList, guild, song) {
+async function Play(server, guild, song) {
     console.log('hello');
-    const serverInfo = serverList.get(guild.id);
-    const musicPlayer = serverInfo.musicPlayer;
+    // const serverInfo = serverList.get(guild.id);
+    const musicPlayer = server.musicPlayer;
     if(!song) {
         musicPlayer.UpdatePlaying();
-        serverInfo.textChannel.send(`There are no more songs in the queue, leaving voice channel.`);
+        server.textChannel.send(`There are no more songs in the queue, leaving voice channel.`);
 
         // reset set currentSongIndex back to 0
         musicPlayer.currentSongIndex = 0;
@@ -54,15 +54,15 @@ async function Play(serverList, guild, song) {
         //     serverList: serverList
         // }
 
-        let response = LeaveChannel(serverInfo, guild.me);
+        let response = LeaveChannel(server, guild.me);
 
         if(!response) {
-            return serverInfo.textChannel.send('I\'m not currently in a voice channel!');
+            return server.textChannel.send('I\'m not currently in a voice channel!');
         }
-        return serverInfo.textChannel.send('Successfully left the voice channel!');
+        return server.textChannel.send('Successfully left the voice channel!');
     }
 
-    const dispatcher = serverInfo.connection
+    const dispatcher = server.connection
         .play(await ytdlDiscord(song.url), {type: 'opus'})
         .on('finish', () => {
             let songIndex = (musicPlayer.currentSongIndex + 1) < musicPlayer.songs.length ? musicPlayer.currentSongIndex + 1 : 0;
@@ -78,7 +78,7 @@ async function Play(serverList, guild, song) {
             }
 
             musicPlayer.currentSongIndex = songIndex;
-            Play(serverList, guild, musicPlayer.songs[songIndex]);
+            Play(server, guild, musicPlayer.songs[songIndex]);
         })
         .on('error', error => {
             musicPlayer.UpdatePlaying();
@@ -86,7 +86,7 @@ async function Play(serverList, guild, song) {
         });
     
     dispatcher.setVolumeLogarithmic(musicPlayer.volume);
-    serverInfo.textChannel.send(`Now Playing: ***${song.title}***`);
+    server.textChannel.send(`Now Playing: ***${song.title}***`);
     musicPlayer.UpdatePlaying(song);
 }
 
@@ -171,9 +171,9 @@ async function CreateSongList(message, songs) {
     return finalSongList;
 }
 
-async function QueueSongs(serverList, message, songs) {
-    const serverInfo = serverList.get(message.guild.id);
-    const musicPlayer = serverInfo.musicPlayer;
+async function QueueSongs(server, message, songs) {
+    // const serverInfo = serverList.get(message.guild.id);
+    const musicPlayer = server.musicPlayer;
     const songList = await CreateSongList(message, songs);
 
     songList.forEach(song => {
@@ -184,9 +184,9 @@ async function QueueSongs(serverList, message, songs) {
     // serverList.set(message.guild.id, serverInfo);
 }
 
-function QueuePlaylist(serverList, message, songs) {
-    const serverInfo = serverList.get(message.guild.id);
-    const musicPlayer = serverInfo.musicPlayer;
+function QueuePlaylist(server, message, songs) {
+    // const serverInfo = serverList.get(message.guild.id);
+    const musicPlayer = server.musicPlayer;
 
     let songInfo = songs.map(song => {
         return {title: song.title, url: song.url};

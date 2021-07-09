@@ -5,7 +5,6 @@ module.exports = {
     aliases: ['pa'],
     execute(message, data) {
         const serverInfo = data.serverInfo;
-        // const serverList = data.serverList;
         const musicPlayer = serverInfo.musicPlayer;
 
         if(musicPlayer.playing){
@@ -17,7 +16,5 @@ module.exports = {
             musicPlayer.playing = true;
             message.channel.send('Resumed');
         }
-
-        // serverList.set(message.guild.id, serverInfo);
     }
 }

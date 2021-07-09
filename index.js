@@ -87,26 +87,17 @@ client.on('message', async msg => {
 
     const command = client.commands.get(commandName) || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-    // For command specific data
-    let commandData = {};
-
-    if(command.name === 'music') {
-        commandData = {
-            serverInfo: serverInfo,
-            serverList: serverList
-        }
-    }
-
     // Data object that will be passed as a parameter in order to execute the given command
     const data = {
         args: args,
         help: commandHelp,
-        commandData: commandData
+        serverInfo: serverInfo
     }
 
     try {
         command.execute(msg, data);
-        // console.log(serverList.get(msg.guild.id));
+        console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~Printing server Information~~~~~~~~~~~~~~~~~~~~~~~~~~`)
+        console.log(serverList.get(msg.guild.id));
     } catch(error) {
         console.error(error);
     }
