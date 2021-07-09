@@ -40,7 +40,6 @@ function LeaveChannel(server, bot) {
 
 async function Play(server, guild, song) {
     console.log('hello');
-    // const serverInfo = serverList.get(guild.id);
     const musicPlayer = server.musicPlayer;
     if(!song) {
         musicPlayer.UpdatePlaying();
@@ -48,11 +47,6 @@ async function Play(server, guild, song) {
 
         // reset set currentSongIndex back to 0
         musicPlayer.currentSongIndex = 0;
-
-        // const server = {
-        //     serverInfo: serverInfo,
-        //     serverList: serverList
-        // }
 
         let response = LeaveChannel(server, guild.me);
 
@@ -65,16 +59,18 @@ async function Play(server, guild, song) {
     const dispatcher = server.connection
         .play(await ytdlDiscord(song.url), {type: 'opus'})
         .on('finish', () => {
-            let songIndex = (musicPlayer.currentSongIndex + 1) < musicPlayer.songs.length ? musicPlayer.currentSongIndex + 1 : 0;
+            // Check to see if we increment the songIndex by 1 if it will go past the length of our song list.
+            // If it does, set it to -1.
+            let songIndex = (musicPlayer.currentSongIndex + 1) < musicPlayer.songs.length ? musicPlayer.currentSongIndex + 1 : -1;
 
             if(musicPlayer.repeat === Repeat.One) {
                 // if repeat is set to one, just set the songIndex to currentSongIndex
                 songIndex = musicPlayer.currentSongIndex;
             }
 
-            if(musicPlayer.repeat === Repeat.Off && songIndex < musicPlayer.currentSongIndex) {
-                // If there repeat is off and we have gone through all songs, set song index to -1 to stop playing music
-                songIndex = -1;
+            if(musicPlayer.repeat === Repeat.On && songIndex < musicPlayer.currentSongIndex) {
+                // If repeat is on and songIndex is smaller than current song index
+                songindex = 0;
             }
 
             musicPlayer.currentSongIndex = songIndex;
