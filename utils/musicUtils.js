@@ -72,7 +72,7 @@ async function Play(server, guild, song) {
     }
 
     const dispatcher = server.connection
-        .play(await ytdlDiscord(song.url), {type: 'opus'})
+        .play(await ytdlDiscord(song.url), {type: 'opus', highWaterMark: 1})
         .on('finish', () => {
             // Check to see if we increment the songIndex by 1 if it will go past the length of our song list.
             // If it does, set it to -1.
