@@ -96,8 +96,8 @@ client.on('message', async msg => {
 
     try {
         command.execute(msg, data);
-        console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~Printing server Information~~~~~~~~~~~~~~~~~~~~~~~~~~`)
-        console.log(serverList.get(msg.guild.id));
+        // console.log(`~~~~~~~~~~~~~~~~~~~~~~~~~~Printing server Information~~~~~~~~~~~~~~~~~~~~~~~~~~`)
+        // console.log(serverList.get(msg.guild.id));
     } catch(error) {
         console.error(error);
     }

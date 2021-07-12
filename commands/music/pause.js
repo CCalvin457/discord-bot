@@ -7,14 +7,23 @@ module.exports = {
         const serverInfo = data.serverInfo;
         const musicPlayer = serverInfo.musicPlayer;
 
-        if(musicPlayer.playing){
-            serverInfo.connection.dispatcher.pause();
-            musicPlayer.playing = false;
-            message.channel.send('Paused');
+        if(serverInfo.connection && serverInfo.connection.dispatcher) {
+            if(musicPlayer.playing) {
+                serverInfo.connection.dispatcher.pause();
+                musicPlayer.playing = false;
+                message.channel.send('Paused');
+            } else {
+                if(serverInfo.connection.dispatcher.paused) {
+                    serverInfo.connection.dispatcher.resume();
+                    musicPlayer.playing = true;
+                    message.channel.send('Resumed');
+                } else {
+                    message.reply(`nothing was paused`);
+                }
+            }
         } else {
-            serverInfo.connection.dispatcher.resume();
-            musicPlayer.playing = true;
-            message.channel.send('Resumed');
+            message.reply(`I'm not currently in a voice channel or there is currently no song playing to pause/resume!`);
         }
+        
     }
 }
