@@ -289,8 +289,8 @@ async function GetFavouriteSong(message, guildId, query) {
 
             const songListEmbed = new MessageEmbed()
                 .setColor('#0099ff')
-                .setTitle('Song List')
-                .setDescription('Which song did you want to play?')
+                .setTitle(`Song List: "${query}"`)
+                .setDescription(`Which song did you want to play?\n\nPlease enter a number to select your song`)
                 .addFields(songList);
             
             // Allows users to input a number to select which song to play or add to the queue
