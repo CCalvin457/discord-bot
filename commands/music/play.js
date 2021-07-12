@@ -49,7 +49,7 @@ module.exports = {
             });
         } else {
             console.log('already in correct channel');
-            if(!serverInfo.playing) {
+            if(!musicPlayer.playing) {
                 Play(serverInfo, message.guild, songs[musicPlayer.currentSongIndex]);
             }
         }
