@@ -72,7 +72,7 @@ async function Play(server, guild, song) {
     }
 
     const dispatcher = server.connection
-        .play(await ytdlDiscord(song.url), {type: 'opus'})
+        .play(await ytdlDiscord(song.url), {type: 'opus', highWaterMark: 1})
         .on('finish', () => {
             // Check to see if we increment the songIndex by 1 if it will go past the length of our song list.
             // If it does, set it to -1.
@@ -169,7 +169,12 @@ function LoadMusicCommands() {
     return musicCommandCollection;
 }
 
-
+/**
+ * Creates a list of song objects that is used to play songs
+ * @param {Message} message DiscordJS Message Object
+ * @param {array} songs An array of YouTube URLs
+ * @returns {array} A list of song objects 
+ */
 async function CreateSongList(message, songs) {
     let finalSongList = [];
 
@@ -197,6 +202,12 @@ async function CreateSongList(message, songs) {
     return finalSongList;
 }
 
+/**
+ * Takes the list of songs (YouTube URLSs) and adds them into the servers song queue
+ * @param {Server} server Object containing server information
+ * @param {Message} message DiscordJS Message object
+ * @param {array} songs List of YouTube URLs
+ */
 async function QueueSongs(server, message, songs) {
     const musicPlayer = server.musicPlayer;
     const songList = await CreateSongList(message, songs);
@@ -207,6 +218,12 @@ async function QueueSongs(server, message, songs) {
     });
 }
 
+/**
+ * Creates a list of song objects from a playlist and adds them into the servers song queue
+ * @param {Server} server Object containing server information
+ * @param {Message} message DiscordJS Message object
+ * @param {array} songs List of ytpl items
+ */
 function QueuePlaylist(server, message, songs) {
     const musicPlayer = server.musicPlayer;
 
@@ -221,6 +238,11 @@ function QueuePlaylist(server, message, songs) {
     message.channel.send(`${songInfo.length} songs have been added to the queue!`);
 }
 
+/**
+ * Creates a list of song objects that will be used for an embeded message
+ * @param {array} songs List of song objects
+ * @returns {array} List of objects to be used in an Embeded message
+ */
 function SongListForEmbed(songs) {
     const songList = [];
 
@@ -235,6 +257,13 @@ function SongListForEmbed(songs) {
     return songList;
 }
 
+/**
+ * Retrieves a users favourited song from the database
+ * @param {Message} message DiscordJS Message object
+ * @param {string} guildId The id of the discord server
+ * @param {string} query The name of the favourited song
+ * @returns {object} The selected song object
+ */
 async function GetFavouriteSong(message, guildId, query) {
     let song = '';
     // find all songs that contains the query
@@ -260,8 +289,8 @@ async function GetFavouriteSong(message, guildId, query) {
 
             const songListEmbed = new MessageEmbed()
                 .setColor('#0099ff')
-                .setTitle('Song List')
-                .setDescription('Which song did you want to play?')
+                .setTitle(`Song List: "${query}"`)
+                .setDescription(`Which song did you want to play?\n\nPlease enter a number to select your song`)
                 .addFields(songList);
             
             // Allows users to input a number to select which song to play or add to the queue
