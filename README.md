@@ -1,6 +1,7 @@
 # Discord-bot
 
 Just a personal project, messing around with discord bots and discord.js
+Mainly a music bot but I might try to add other things to it.
 
 ## Currently Working
 
@@ -21,13 +22,13 @@ Just a personal project, messing around with discord bots and discord.js
 - [x] Get the weather based on a city name
 - [x] Help command
 - [x] Decision maker (picks one item from a given list of items)
+- [x] Pause / Resume
 
-## I might get to these, probably not
+## I might get to these
 
 ### Music related
 
 - [ ] Specify a start time for a song
-- [ ] Pause / Resume
 
 ### Others
 
