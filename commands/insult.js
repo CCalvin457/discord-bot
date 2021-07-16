@@ -1,4 +1,5 @@
 let axios = require('axios');
+let {decode} = require('html-entities');
 let { GetUserFromMention } = require('../utils/generalUtil.js');
 
 module.exports = {
@@ -23,7 +24,7 @@ module.exports = {
                 return message.reply(`${insult}. (Also seems like you don't know how to ping someone properly).`);
             }
 
-            return message.channel.send(`${user}, ${insult}`);
+            return message.channel.send(`${user}, ${decode(insult)}`);
 
         }
 

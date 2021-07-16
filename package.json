@@ -12,6 +12,7 @@
     "ffmpeg-static": "^4.4.0",
     "firebase-admin": "^9.10.0",
     "fluent-ffmpeg": "^2.1.2",
+    "html-entities": "^2.3.2",
     "moment": "^2.29.1",
     "opusscript": "0.0.8",
     "ytdl-core": "^4.8.3",
