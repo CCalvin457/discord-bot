@@ -4,7 +4,7 @@
   "description": "Messing around with discord bots",
   "main": "index.js",
   "dependencies": {
-    "@discordjs/opus": "^0.5.3",
+    "@discordjs/opus": "^0.8.0",
     "axios": "^0.21.2",
     "discord.js": "^12.5.3",
     "dotenv": "^10.0.0",
